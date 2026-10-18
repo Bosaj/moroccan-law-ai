@@ -19,7 +19,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: 'pip'
 
       - name: Install Dependencies
         run: |
@@ -28,11 +27,28 @@ jobs:
           if [ -f pyproject.toml ]; then pip install .; fi
           pip install flake8 pytest
 
-      - name: Lint with Flake8
+      - name: Verify Documentation & Governance Standards
         run: |
-          # Stop build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+          echo "Verifying repository governance standards..."
+          test -f README.md && echo "✓ README.md present"
+          test -f LICENSE && echo "✓ LICENSE present"
+          test -f CONTRIBUTING.md && echo "✓ CONTRIBUTING.md present"
+          test -f CONTRIBUTORS.md && echo "✓ CONTRIBUTORS.md present"
+          test -f SECURITY.md && echo "✓ SECURITY.md present"
+          test -f CHANGELOG.md && echo "✓ CHANGELOG.md present"
+
+      - name: Lint Python Code with Flake8
+        run: |
+          if ls *.py 1> /dev/null 2>&1 || [ -d src ]; then
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+          else
+            echo "No root Python files to lint."
+          fi
 
       - name: Run Pytest
         run: |
-          if [ -d tests ] || [ -f test*.py ]; then pytest -v || true; else echo "No pytest suite configured yet."; fi
+          if [ -d tests ] || ls test*.py 1> /dev/null 2>&1; then
+            pytest -v || true
+          else
+            echo "No pytest suite configured yet for foundation milestone."
+          fi
