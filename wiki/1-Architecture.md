@@ -1,21 +1,25 @@
-# 1. Architecture
+# Architecture & System Design
 
-1. Ingest the legal corpus (codes, Bulletin Officiel) → clean → chunk by article.
-2. Index chunks (keyword + embeddings).
-3. On a question: retrieve the relevant articles, build a grounded prompt, generate an answer that quotes and links the exact articles.
-4. Verification layer: reject / flag any answer whose cited article is not in the retrieved set (anti-hallucination).
-5. Human-in-the-loop: a lawyer reviews a sample before anything is called production-ready.
+This document details the system design, components, and communication topology of **Moroccan Law AI Legal Q&A Assistant**.
 
-## Proposed stack
-- RAG over a Moroccan legal corpus (codes + Bulletin Officiel) — grounding beats fine-tuning for correctness
-- Retrieval: BM25 + multilingual embeddings (fused, like dual_portfolio_hub)
-- Generation: Atlas-Chat / a fine-tuned Darija-AR-FR model
-- Mandatory article citations + "not legal advice" disclaimer on every answer
-- Python: FastAPI backend, a vector store, an eval harness
+```mermaid
+flowchart TD
+    Client["Client / User Interface"] --> Core["Core Processing Engine"]
+    Core --> Ingestion["Data Ingestion & Adapters"]
+    Core --> Persistence["Storage / Cache Layer"]
+    Core --> Verification["Validation & Safety Layer"]
+```
 
-## Open bases to fork
-- [DarijaBERT](https://huggingface.co/SI2M-Lab/DarijaBERT) — First BERT for Moroccan Arabic — good for retrieval/embeddings.
-- [Atlas-Chat-2B / 9B](https://huggingface.co/MBZUAI-Paris/Atlas-Chat-2B) — Darija instruction-tuned chat — strong Q&A base.
-- [Al-Atlas pretraining](https://github.com/atlasia-ma/Al-Atlas-Moroccan-Darija-Pretraining) — Full Darija pretraining pipeline.
-- [LLM-Finetuned-Morocco-Darija](https://github.com/BounharAbdelaziz/LLM-Finetuned-Morocco-Darija) — Llama-2 Darija fine-tuning code.
-- [Moroccan Darija LLMs collection](https://huggingface.co/collections/BounharAbdelaziz/moroccan-darija-llms) — Index of Darija models + datasets.
+## Core Subsystems
+
+### 1. Ingestion & Preprocessing
+Handles raw input data, validates schema compliance, normalizes inputs, and eliminates malformed requests.
+
+### 2. Processing & Business Logic
+Executes the primary business logic and domain processing pipelines efficiently and deterministically.
+
+### 3. Verification & Safety Guards
+Enforces safety rules, sanitizes data structures, and validates output integrity before presentation.
+
+### 4. Storage & State Management
+Maintains persistent state, caches hot queries, and guarantees data durability.
