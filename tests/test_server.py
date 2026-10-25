@@ -64,6 +64,22 @@ class TestServerRoutes(unittest.TestCase):
         self.assertGreater(payload["risk_score"], 0)
         self.assertGreater(len(payload["violations"]), 0)
 
+    def test_laws_pdf_endpoint(self):
+        status, payload = process_api_request("GET", "/api/laws-pdf")
+        self.assertEqual(status, 200)
+        self.assertIn("laws", payload)
+        self.assertGreaterEqual(payload["total_files_downloaded"], 20)
+
+    def test_pdf_resolution(self):
+        from server import resolve_pdf
+        pdf_file = resolve_pdf("/data/laws_pdf/ar/code_famille_moudawana_loi_70_03_ar.pdf")
+        self.assertIsNotNone(pdf_file)
+        self.assertTrue(pdf_file.endswith(".pdf"))
+
+        # Traversal attempts must be blocked
+        traversal = resolve_pdf("/data/laws_pdf/../../server.py")
+        self.assertIsNone(traversal)
+
     def test_unknown_route(self):
         status, payload = process_api_request("GET", "/api/nonexistent")
         self.assertEqual(status, 404)

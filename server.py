@@ -21,6 +21,7 @@ from src.legal_rag import MoroccanLegalRAG
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
+PDF_DIR = os.path.join(DATA_DIR, "laws_pdf")
 STATIC_DIR = os.path.join(BASE_DIR, "web", "dist")
 DB_PATH = os.path.join(DATA_DIR, "legal_audit.db")
 
@@ -186,6 +187,11 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
         )
         return 200, report
 
+    if route == "/api/laws-pdf" and method == "GET":
+        from src.download_laws import get_law_manifest
+        manifest = get_law_manifest()
+        return 200, manifest
+
     return 404, {"error": f"Unknown API endpoint: {route}"}
 
 
@@ -208,6 +214,17 @@ def resolve_static(url_path: str) -> Optional[str]:
     if os.path.splitext(clean)[1] == "":
         index = os.path.join(root, "index.html")
         return index if os.path.isfile(index) else None
+    return None
+
+
+def resolve_pdf(url_path: str) -> Optional[str]:
+    """Maps a /data/laws_pdf/... request to an authorized PDF inside PDF_DIR."""
+    root = os.path.realpath(PDF_DIR)
+    clean = unquote(urlparse(url_path).path)
+    rel = clean.replace("/data/laws_pdf/", "").lstrip("/\\")
+    candidate = os.path.realpath(os.path.join(root, rel))
+    if candidate.startswith(root + os.sep) and os.path.isfile(candidate) and candidate.endswith(".pdf"):
+        return candidate
     return None
 
 
@@ -252,6 +269,14 @@ class MoroccanLawHTTPRequestHandler(BaseHTTPRequestHandler):
             self._send_json(code, payload)
             return
 
+        if self.path.startswith("/data/laws_pdf/"):
+            pdf_target = resolve_pdf(self.path)
+            if pdf_target:
+                self._send_file(pdf_target)
+                return
+            self._send_json(404, {"error": "Official Law PDF not found or not yet synchronized"})
+            return
+
         target = resolve_static(self.path)
         if target:
             self._send_file(target)
@@ -287,7 +312,12 @@ def run_server(port: int = 8090) -> None:
     init_db()
     server = ThreadingHTTPServer(("127.0.0.1", port), MoroccanLawHTTPRequestHandler)
     print(f"Mizan (moroccan-law-ai) running on http://localhost:{port}")
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n[Mizan] Server stopped cleanly by user.")
+    finally:
+        server.server_close()
 
 
 if __name__ == "__main__":

@@ -1,11 +1,12 @@
-### Navigation
-* **[Home](Home)**
-* **[Architecture](1-Architecture)**
-* **[Roadmap](2-Roadmap)**
-* **[Developer Setup](Developer-Setup)**
+### [Mizan · ميزان](Home)
+
+* **[Wiki Home](Home)**
+* **[1. System Architecture](1-Architecture)**
+* **[2. Official Laws PDF Archive](2-Official-Laws-PDF-Archive)**
+* **[3. Darija NLP & Statutory Bridge](3-Darija-NLP-and-Statutory-Bridge)**
+* **[4. Contract Compliance Auditor](4-Contract-Compliance-Auditor)**
+* **[5. REST API Reference](5-REST-API-Reference)**
+* **[Developer Setup & Testing](Developer-Setup)**
 
 ---
-### External Links
-* [GitHub Repository](https://github.com/Bosaj/moroccan-law-ai)
-* [Issue Tracker](https://github.com/Bosaj/moroccan-law-ai/issues)
-* [Releases](https://github.com/Bosaj/moroccan-law-ai/releases)
+*Author: [@Bosaj](https://github.com/Bosaj)*

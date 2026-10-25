@@ -1,0 +1,298 @@
+{
+  "institution": "Secrétariat Général du Gouvernement (Royaume du Maroc — sgg.gov.ma)",
+  "source": "Official Gazette (Bulletin Officiel — الجريدة الرسمية)",
+  "updated_at": "2026-10-25 18:25:18 UTC",
+  "total_laws_count": 12,
+  "total_files_downloaded": 24,
+  "total_archive_size_mb": 83.53,
+  "laws": [
+    {
+      "id": "code_famille",
+      "title_fr": "Code de la Famille (Moudawana)",
+      "title_ar": "مدونة الأسرة",
+      "law_number": "Loi n° 70-03",
+      "dahir": "Dahir n° 1-04-22 du 12 hija 1424 (3 février 2004)",
+      "domain": "family_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 5184",
+          "publication_date": "2004-02-05",
+          "local_path": "data/laws_pdf/ar/code_famille_moudawana_loi_70_03_ar.pdf",
+          "size_bytes": 1685263,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2004/BO_5184_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 5184",
+          "publication_date": "2004-02-05",
+          "local_path": "data/laws_pdf/fr/code_famille_moudawana_loi_70_03_fr.pdf",
+          "size_bytes": 5749028,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2004/BO_5184_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "code_travail",
+      "title_fr": "Code du Travail",
+      "title_ar": "مدونة الشغل",
+      "law_number": "Loi n° 65-99",
+      "dahir": "Dahir n° 1-03-194 du 14 rejeb 1424 (11 septembre 2003)",
+      "domain": "labor_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 5167",
+          "publication_date": "2003-12-08",
+          "local_path": "data/laws_pdf/ar/code_du_travail_loi_65_99_ar.pdf",
+          "size_bytes": 6104525,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2003/BO_5167_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 5210",
+          "publication_date": "2004-05-06",
+          "local_path": "data/laws_pdf/fr/code_du_travail_loi_65_99_fr.pdf",
+          "size_bytes": 11192072,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2004/BO_5210_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "code_route",
+      "title_fr": "Code de la Route (Loi 52-05)",
+      "title_ar": "مدونة السير على الطرق",
+      "law_number": "Loi n° 52-05",
+      "dahir": "Dahir n° 1-10-07 du 26 safar 1431 (11 février 2010)",
+      "domain": "traffic_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 5878",
+          "publication_date": "2010-09-30",
+          "local_path": "data/laws_pdf/ar/code_de_la_route_loi_52_05_ar.pdf",
+          "size_bytes": 5300194,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2010/BO_5878_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 5888",
+          "publication_date": "2010-11-04",
+          "local_path": "data/laws_pdf/fr/code_de_la_route_loi_52_05_fr.pdf",
+          "size_bytes": 3489777,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2010/BO_5888_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "code_route_reforme",
+      "title_fr": "Réforme du Code de la Route (Loi 116-14)",
+      "title_ar": "تعديل وتتميم مدونة السير على الطرق",
+      "law_number": "Loi n° 116-14",
+      "dahir": "Dahir n° 1-16-106 du 13 kaada 1437 (17 août 2016)",
+      "domain": "traffic_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 6496",
+          "publication_date": "2016-09-01",
+          "local_path": "data/laws_pdf/ar/reforme_code_route_loi_116_14_ar.pdf",
+          "size_bytes": 2615376,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2016/BO_6496_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 6496",
+          "publication_date": "2016-09-01",
+          "local_path": "data/laws_pdf/fr/reforme_code_route_loi_116_14_fr.pdf",
+          "size_bytes": 1804142,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2016/BO_6496_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "code_commerce",
+      "title_fr": "Code de Commerce & Sociétés Commerciales",
+      "title_ar": "مدونة التجارة وقانون الشركات التجارية",
+      "law_number": "Loi n° 15-95 & Loi n° 5-96",
+      "dahir": "Dahir n° 1-96-83 du 15 rabii I 1417 (1er août 1996)",
+      "domain": "commercial_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 4418",
+          "publication_date": "1996-10-03",
+          "local_path": "data/laws_pdf/ar/code_de_commerce_loi_15_95_ar.pdf",
+          "size_bytes": 2952779,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/1996/BO_4418_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 4482",
+          "publication_date": "1997-05-15",
+          "local_path": "data/laws_pdf/fr/code_de_commerce_loi_15_95_fr.pdf",
+          "size_bytes": 3696781,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/1997/BO_4482_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "societes_anonymes",
+      "title_fr": "Loi sur la Société Anonyme (SA)",
+      "title_ar": "قانون شركة المساهمة",
+      "law_number": "Loi n° 17-95",
+      "dahir": "Dahir n° 1-96-124 du 14 rabii II 1417 (30 août 1996)",
+      "domain": "corporate_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 4422",
+          "publication_date": "1996-10-17",
+          "local_path": "data/laws_pdf/ar/societes_anonymes_loi_17_95_ar.pdf",
+          "size_bytes": 2952779,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/1996/BO_4418_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 4418",
+          "publication_date": "1996-10-03",
+          "local_path": "data/laws_pdf/fr/societes_anonymes_loi_17_95_fr.pdf",
+          "size_bytes": 6888377,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/1996/BO_4418_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "cndp_donnees_personnelles",
+      "title_fr": "Protection des Données à Caractère Personnel (CNDP)",
+      "title_ar": "حماية الأشخاص الذاتيين تجاه معالجة المعطيات ذات الطابع الشخصي",
+      "law_number": "Loi n° 09-08",
+      "dahir": "Dahir n° 1-09-15 du 22 safar 1430 (18 février 2009)",
+      "domain": "data_protection",
+      "files": {
+        "ar": {
+          "bo_number": "BO 5711",
+          "publication_date": "2009-02-23",
+          "local_path": "data/laws_pdf/ar/loi_09_08_cndp_donnees_personnelles_ar.pdf",
+          "size_bytes": 523639,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2009/BO_5711_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 5744",
+          "publication_date": "2009-06-18",
+          "local_path": "data/laws_pdf/fr/loi_09_08_cndp_donnees_personnelles_fr.pdf",
+          "size_bytes": 5186117,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2009/BO_5744_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "baux_habitation",
+      "title_fr": "Baux d'Habitation et à Usage Professionnel",
+      "title_ar": "الكراء السكني والاستعمال المهني",
+      "law_number": "Loi n° 67-12",
+      "dahir": "Dahir n° 1-13-111 du 15 moharrem 1435 (19 novembre 2013)",
+      "domain": "real_estate_lease",
+      "files": {
+        "ar": {
+          "bo_number": "BO 6208",
+          "publication_date": "2013-11-28",
+          "local_path": "data/laws_pdf/ar/loi_67_12_baux_habitation_ar.pdf",
+          "size_bytes": 1206285,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2013/BO_6208_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 6240",
+          "publication_date": "2014-03-20",
+          "local_path": "data/laws_pdf/fr/loi_67_12_baux_habitation_fr.pdf",
+          "size_bytes": 5078137,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2014/BO_6240_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "droits_reels",
+      "title_fr": "Code des Droits Réels",
+      "title_ar": "مدونة الحقوق العينية",
+      "law_number": "Loi n° 39-08",
+      "dahir": "Dahir n° 1-11-178 du 25 hija 1432 (22 novembre 2011)",
+      "domain": "property_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 5998",
+          "publication_date": "2011-11-24",
+          "local_path": "data/laws_pdf/ar/code_des_droits_reels_loi_39_08_ar.pdf",
+          "size_bytes": 3071410,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2011/BO_5998_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 6022",
+          "publication_date": "2012-02-16",
+          "local_path": "data/laws_pdf/fr/code_des_droits_reels_loi_39_08_fr.pdf",
+          "size_bytes": 3366555,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2012/BO_6022_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "protection_consommateur",
+      "title_fr": "Protection du Consommateur",
+      "title_ar": "تدابير حماية المستهلك",
+      "law_number": "Loi n° 31-08",
+      "dahir": "Dahir n° 1-11-03 du 14 rabii I 1432 (18 février 2011)",
+      "domain": "consumer_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 5932",
+          "publication_date": "2011-04-07",
+          "local_path": "data/laws_pdf/ar/protection_consommateur_loi_31_08_ar.pdf",
+          "size_bytes": 2225006,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2011/BO_5932_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 5932",
+          "publication_date": "2011-04-07",
+          "local_path": "data/laws_pdf/fr/protection_consommateur_loi_31_08_fr.pdf",
+          "size_bytes": 3898884,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2011/BO_5932_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "violence_femmes",
+      "title_fr": "Lutte contre les Violences faites aux Femmes (Code Pénal)",
+      "title_ar": "محاربة العنف ضد النساء وتعديل القانون الجنائي",
+      "law_number": "Loi n° 103-13",
+      "dahir": "Dahir n° 1-18-19 du 5 joumada II 1439 (22 février 2018)",
+      "domain": "criminal_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 6655",
+          "publication_date": "2018-03-12",
+          "local_path": "data/laws_pdf/ar/loi_103_13_violence_femmes_code_penal_ar.pdf",
+          "size_bytes": 3497253,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2018/BO_6655_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 6706",
+          "publication_date": "2018-09-06",
+          "local_path": "data/laws_pdf/fr/loi_103_13_violence_femmes_code_penal_fr.pdf",
+          "size_bytes": 3689489,
+          "url": "https://www.sgg.gov.ma/BO/bo_fr/2018/BO_6706_Fr.pdf"
+        }
+      }
+    },
+    {
+      "id": "reforme_societes_sas",
+      "title_fr": "Modernisation des Sociétés Commerciales & SAS Simplifiée",
+      "title_ar": "تحديث قانون الشركات وتيسير شركة المساهمة المبسطة",
+      "law_number": "Loi n° 19-20 & Loi n° 20-19",
+      "dahir": "Dahir n° 1-21-75 du 3 hija 1442 (14 juillet 2021)",
+      "domain": "corporate_law",
+      "files": {
+        "ar": {
+          "bo_number": "BO 6975",
+          "publication_date": "2021-07-26",
+          "local_path": "data/laws_pdf/ar/reforme_societes_commerciales_loi_19_20_ar.pdf",
+          "size_bytes": 704228,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2021/BO_6975_Ar.pdf"
+        },
+        "fr": {
+          "bo_number": "BO 7010",
+          "publication_date": "2021-08-16",
+          "local_path": "data/laws_pdf/fr/reforme_societes_commerciales_loi_19_20_fr.pdf",
+          "size_bytes": 704228,
+          "url": "https://www.sgg.gov.ma/BO/bo_ar/2021/BO_6975_Ar.pdf"
+        }
+      }
+    }
+  ]
+}

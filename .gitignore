@@ -17,4 +17,7 @@ models/
 node_modules/
 web/node_modules/
 web/dist/
+data/laws_pdf/**/*.pdf
+data/laws_pdf/*.part
+!data/laws_pdf/manifest.json
 *.db
