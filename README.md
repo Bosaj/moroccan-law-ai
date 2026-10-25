@@ -177,4 +177,6 @@ Detailed technical documentation, architectural specifications, and user manuals
 ---
 
 ## 📄 License
-[MIT](LICENSE) — © 2026 Oussama Elhadji (`@Bosaj`)
+**Proprietary & Commercial Software License** — All Rights Reserved © 2026 Oussama Elhadji (`@Bosaj`) <[oussousselhadji@gmail.com](mailto:oussousselhadji@gmail.com)>.
+
+Unauthorized copying, distribution, resale, or reverse engineering is strictly prohibited. See [LICENSE](LICENSE) for full legal terms.
