@@ -199,8 +199,8 @@ LEGAL_DISCLAIMERS = {
 class MoroccanLegalRAG:
     """
     Hybrid Moroccan Legal RAG Engine:
-    Combines Okapi BM25 (k1=1.5, b=0.75) + Character N-Gram Semantic Embeddings
-    fused via Reciprocal Rank Fusion (RRF_K = 60), ported from dual_portfolio_hub/api/_lib/knowledge.js.
+    Combines Okapi BM25 (k1=1.5, b=0.75) + Character Trigram Semantic Vectors
+    fused via Reciprocal Rank Fusion (RRF_K = 60).
     """
 
     def __init__(self) -> None:
