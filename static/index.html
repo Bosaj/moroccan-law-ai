@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moroccan Law AI & Jarida Rasmiya Redline Engine · المستشار القانوني المغربي والجريدة الرسمية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face {
+        font-family: "BouazziMaghribi";
+        src: url("/fonts/BouazziMaghribi-Regular.ttf") format("truetype");
+        font-weight: 400 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      :root {
+        --bg-sovereign: #080b09;
+        --bg-panel: #101613;
+        --bg-core: #141c18;
+        --ink-parchment: #f6f1e6;
+        --ink-secondary: #c5bca8;
+        --ink-muted: #847e6f;
+        --gold-bright: #fff5d6;
+        --gold-primary: #dfb860;
+        --gold-deep: #9c7426;
+        --morocco-emerald: #175943;
+        --emerald-glow: #6ee7b7;
+        --crimson-seal: #c24136;
+        --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        font-family: "Plus Jakarta Sans", "Amiri", sans-serif;
+        background-color: var(--bg-sovereign);
+        background-image:
+          radial-gradient(1100px 600px at 85% -5%, rgba(223, 184, 96, 0.12), transparent 60%),
+          radial-gradient(900px 550px at 10% 15%, rgba(23, 89, 67, 0.18), transparent 60%);
+        color: var(--ink-parchment);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Fixed tactile broadsheet grain */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 40;
+        opacity: 0.025;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      .font-editorial {
+        font-family: "Cormorant Garamond", "BouazziMaghribi", "Amiri", Georgia, serif;
+      }
+      .font-maghribi {
+        font-family: "BouazziMaghribi", "Amiri", serif;
+      }
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .gold-text {
+        background: linear-gradient(180deg, #fff8e2 0%, #dfb860 52%, #a27829 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* Double-Bezel Machined Architecture */
+      .double-bezel-shell {
+        background: rgba(255, 246, 224, 0.025);
+        border: 1px solid rgba(223, 184, 96, 0.18);
+        padding: 6px;
+        border-radius: 24px;
+      }
+      .double-bezel-core {
+        background: linear-gradient(180deg, rgba(22, 30, 26, 0.96) 0%, rgba(12, 17, 14, 0.99) 100%);
+        border: 1px solid rgba(223, 184, 96, 0.14);
+        box-shadow:
+          inset 0 1px 1px rgba(255, 248, 225, 0.1),
+          0 20px 45px -16px rgba(0, 0, 0, 0.8);
+        border-radius: 18px;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(8, 11, 9, 0.9);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(223, 184, 96, 0.16);
+      }
+
+      .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        transition:
+          transform 160ms var(--ease-out-strong),
+          background-color 180ms var(--ease-out-strong),
+          border-color 180ms var(--ease-out-strong);
+      }
+      button:active {
+        transform: scale(0.97);
+      }
+
+      .pill-btn {
+        border-radius: 999px;
+        padding: 8px 18px;
+        font-size: 12.5px;
+        font-weight: 600;
+        border: 1px solid rgba(223, 184, 96, 0.25);
+        background: #121915;
+        color: var(--ink-secondary);
+      }
+      .pill-btn.active {
+        background: linear-gradient(180deg, #fce7b2, #dfb860 55%, #b38632);
+        color: #161105;
+        border-color: #fff5d6;
+        font-weight: 700;
+      }
+
+      .verbatim-card {
+        background: #0d1411;
+        border-left: 4px solid var(--gold-primary);
+        border-top: 1px solid rgba(223, 184, 96, 0.2);
+        border-right: 1px solid rgba(223, 184, 96, 0.2);
+        border-bottom: 1px solid rgba(223, 184, 96, 0.2);
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+
+      .commentary-card {
+        background: #121c18;
+        border-left: 4px solid var(--emerald-glow);
+        border: 1px solid rgba(110, 231, 183, 0.25);
+        border-left-width: 4px;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-verified {
+        background: rgba(23, 89, 67, 0.35);
+        border: 1px solid rgba(110, 231, 183, 0.45);
+        color: #6ee7b7;
+      }
+      .badge-gold {
+        background: rgba(223, 184, 96, 0.14);
+        border: 1px solid rgba(223, 184, 96, 0.4);
+        color: #fbe6b0;
+      }
+
+      input[type="text"],
+      textarea,
+      select {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(223, 184, 96, 0.28);
+        background: #0d1310;
+        color: var(--ink-parchment);
+        padding: 12px 16px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      input[type="text"]:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--gold-primary);
+      }
+
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 14px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 16px;
+      }
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container" style="padding-top: 14px; padding-bottom: 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <!-- Custom Moroccan Sovereign Scales & Khatam SVG Emblem -->
+          <svg viewBox="0 0 72 72" width="52" height="52" role="img" aria-label="Moroccan Law AI Sovereign Seal">
+            <defs>
+              <linearGradient id="law-gold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fff7df" />
+                <stop offset="50%" stop-color="#dfb860" />
+                <stop offset="100%" stop-color="#9c7426" />
+              </linearGradient>
+              <linearGradient id="law-emerald" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#175943" />
+                <stop offset="100%" stop-color="#0a1f17" />
+              </linearGradient>
+            </defs>
+            <g stroke="url(#law-gold)" stroke-width="1.6" fill="url(#law-emerald)">
+              <rect x="13" y="13" width="46" height="46" rx="5" transform="rotate(45 36 36)" />
+              <rect x="13" y="13" width="46" height="46" rx="5" />
+            </g>
+            <!-- Scales of Justice inside Khatam -->
+            <g stroke="url(#law-gold)" stroke-width="1.8" stroke-linecap="round" fill="none">
+              <path d="M36 20 V50" />
+              <path d="M23 28 H49" />
+              <path d="M28 50 H44" />
+              <path d="M23 28 L19 38 H27 Z" fill="rgba(223,184,96,0.25)" />
+              <path d="M49 28 L45 38 H53 Z" fill="rgba(223,184,96,0.25)" />
+            </g>
+            <circle cx="36" cy="20" r="2.5" fill="#fff7df" />
+          </svg>
+
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <h1 class="font-editorial gold-text" style="margin: 0; font-size: 26px; font-weight: 700;">
+                Moroccan Law AI &amp; Jarida Rasmiya Redline Engine
+              </h1>
+              <span class="font-maghribi" style="color: #dfb860; font-size: 18px;">
+                المستشار القانوني المغربي والجريدة الرسمية
+              </span>
+            </div>
+            <p style="margin: 2px 0 0; font-size: 12px; color: var(--ink-secondary);">
+              Grounded Moroccan Statutory RAG (BM25 + RRF k=60) · Strict Verbatim vs. Commentary Separation · Official Gazette (sgg.gov.ma) Redline Diffs
+            </p>
+          </div>
+        </div>
+
+        <!-- Language & Mode Controls -->
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <button id="lang-ar" class="pill-btn active" onclick="setLanguage('ar')">العربية الفصحى</button>
+          <button id="lang-darija" class="pill-btn" onclick="setLanguage('darija')">الدارجة المغربية</button>
+          <button id="lang-fr" class="pill-btn" onclick="setLanguage('fr')">Français</button>
+        </div>
+      </div>
+
+      <!-- Workspace Navigation Tabs -->
+      <div class="container" style="padding-bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px; border-top: 1px solid rgba(223,184,96,0.1); padding-top: 10px;">
+        <button id="tab-btn-qa" class="pill-btn active" onclick="switchTab('qa')" data-testid="tab-qa">
+          ⚖️ 1. Legal Consultation &amp; Darija Bridge
+        </button>
+        <button id="tab-btn-bo" class="pill-btn" onclick="switchTab('bo')" data-testid="tab-bo">
+          📜 2. Jarida Rasmiya (BO) Redline Alerts (17 Issues)
+        </button>
+        <button id="tab-btn-diff" class="pill-btn" onclick="switchTab('diff')" data-testid="tab-diff">
+          🔬 3. Custom Article Redline Comparator
+        </button>
+        <button id="tab-btn-contract" class="pill-btn" onclick="switchTab('contract')" data-testid="tab-contract">
+          🛡️ 4. Moroccan Contract Compliance Auditor
+        </button>
+      </div>
+    </header>
+
+    <main class="container" style="padding-top: 24px; padding-bottom: 60px;">
+      <!-- KPI Strip -->
+      <div class="grid-4" style="margin-bottom: 22px;">
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core" style="padding: 14px 18px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-muted);">Retrieval Architecture</div>
+            <div class="font-editorial gold-text" style="font-size: 22px; font-weight: 700; margin-top: 2px;">BM25 + RRF (k=60)</div>
+            <div class="font-mono" style="font-size: 11px; color: #6ee7b7;">Anti-Hallucination Gate Active</div>
+          </div>
+        </div>
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core" style="padding: 14px 18px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-muted);">Moroccan Legal Codes</div>
+            <div class="font-editorial" style="font-size: 22px; font-weight: 700; color: var(--ink-parchment); margin-top: 2px;">7 Core Codes</div>
+            <div class="font-mono" style="font-size: 11px; color: var(--ink-secondary);">Moudawana · Travail · SARL · DOC · CNDP</div>
+          </div>
+        </div>
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core" style="padding: 14px 18px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-muted);">Bulletin Officiel Feed</div>
+            <div id="kpi-bo-count" class="font-editorial" style="font-size: 22px; font-weight: 700; color: #dfb860; margin-top: 2px;">17 BO Issues</div>
+            <div class="font-mono" style="font-size: 11px; color: var(--ink-secondary);">sgg.gov.ma · BO 6948 → BO 7542</div>
+          </div>
+        </div>
+        <div class="double-bezel-shell">
+          <div class="double-bezel-core" style="padding: 14px 18px;">
+            <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-muted);">Citation Safety</div>
+            <div class="font-editorial" style="font-size: 22px; font-weight: 700; color: #6ee7b7; margin-top: 2px;">100% Verbatim</div>
+            <div class="font-mono" style="font-size: 11px; color: var(--ink-secondary);">Dahir + Law # + BO Issue #</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== WORKSPACE 1: LEGAL Q&A + DARIJA BRIDGE ==================== -->
+      <section id="workspace-qa" class="double-bezel-shell">
+        <div class="double-bezel-core" style="padding: 24px;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <h2 class="font-editorial gold-text" style="margin: 0; font-size: 24px;">
+                1. Grounded Moroccan Legal Consultation (العربية · الدارجة · Français)
+              </h2>
+              <p style="margin: 4px 0 0; font-size: 12.5px; color: var(--ink-secondary);">
+                Ask in everyday Moroccan Darija (Arabic or Latin Arabizi), Modern Standard Arabic, or French. Every claim cites a verified Bulletin Officiel article.
+              </p>
+            </div>
+            <span class="badge badge-verified" data-testid="anti-hallucination-badge">
+              ✔ Anti-Hallucination Gate: Verbatim Citations Enforced
+            </span>
+          </div>
+
+          <!-- Preset Quick Queries -->
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+            <button class="pill-btn" onclick="runPresetQuery('جراو عليا من الخدمة بلا سابق إنذار وبغيت نعرف التعويض ديالي')">
+              🗣️ Darija: الطرد التعسفي والتعويض
+            </button>
+            <button class="pill-btn" onclick="runPresetQuery('moul dar bgha ykhrjni mn lkra bla ma y3lemni')">
+              🏠 Arabizi: الإفراغ من الكراء (Loi 67-12)
+            </button>
+            <button class="pill-btn" onclick="runPresetQuery('ما هي شروط تأسيس شركة SARL وعقوبة شيك بدون رصيد؟')">
+              🏢 SARL &amp; Chèque sans provision
+            </button>
+            <button class="pill-btn" onclick="runPresetQuery('حماية المعطيات الشخصية وكاميرات المراقبة CNDP 09-08')">
+              🔒 CNDP Loi 09-08 (Données personnelles)
+            </button>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+            <input
+              id="legal-query-input"
+              data-testid="legal-query-input"
+              type="text"
+              value="جراو عليا من الخدمة بلا سابق إنذار وبغيت نعرف التعويض ديالي"
+              placeholder="اطرح سؤالك القانوني بالعربية أو بالدارجة أو بالفرنسية..."
+              style="flex: 1; min-width: 260px;"
+            />
+            <button
+              id="legal-search-btn"
+              data-testid="legal-search-btn"
+              class="pill-btn active"
+              style="padding: 12px 26px; font-size: 13.5px;"
+              onclick="executeLegalQuery()"
+            >
+              ⚖️ Retrieve Statutory Citations
+            </button>
+          </div>
+
+          <!-- Query Metadata Badges -->
+          <div id="qa-meta-bar" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;"></div>
+
+          <!-- 1. Verbatim Statutory Citations Container -->
+          <h3 class="font-editorial" style="font-size: 20px; color: #fbe6b0; margin: 16px 0 10px;">
+            📜 1. Verbatim Statutory Citations (نصوص قانونية حرفية موثقة من الجريدة الرسمية)
+          </h3>
+          <div id="verbatim-citations-list" data-testid="verbatim-citations-list"></div>
+
+          <!-- 2. Strictly Separated AI Commentary Container -->
+          <h3 class="font-editorial" style="font-size: 20px; color: #6ee7b7; margin: 22px 0 10px;">
+            💡 2. Simplified Legal Commentary — Strictly Separated from Verbatim Law (شرح مبسط بالدارجة والفصحى والفرنسية)
+          </h3>
+          <div id="ai-commentary-box" data-testid="ai-commentary-box"></div>
+        </div>
+      </section>
+
+      <!-- ==================== WORKSPACE 2: OFFICIAL GAZETTE (JARIDA RASMIYA) REDLINE ENGINE ==================== -->
+      <section id="workspace-bo" class="double-bezel-shell hidden">
+        <div class="double-bezel-core" style="padding: 24px;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px;">
+            <div>
+              <h2 class="font-editorial gold-text" style="margin: 0; font-size: 24px;">
+                2. Official Gazette (Jarida Rasmiya — الجريدة الرسمية sgg.gov.ma) Redline Diffs
+              </h2>
+              <p style="margin: 4px 0 0; font-size: 12.5px; color: var(--ink-secondary);">
+                Automated article-by-article redline diffing &amp; trilingual summaries across Moroccan Bulletin Officiel issues.
+              </p>
+            </div>
+            <div style="width: 260px;">
+              <select id="bo-audience-filter" onchange="loadBoIssues()">
+                <option value="all">🎯 All Target Audiences (الكل)</option>
+                <option value="SMEs">SMEs &amp; Founders (المقاولات الصغرى)</option>
+                <option value="Accountants">Accountants &amp; Tax (المحاسبون)</option>
+                <option value="Corporate Lawyers">Corporate Lawyers (المحامون)</option>
+                <option value="Tech Startups">Tech Startups &amp; DPOs</option>
+                <option value="Citizens">Citizens (المواطنون)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="bo-issues-container" data-testid="bo-issues-container"></div>
+        </div>
+      </section>
+
+      <!-- ==================== WORKSPACE 3: CUSTOM ARTICLE REDLINE COMPARATOR ==================== -->
+      <section id="workspace-diff" class="double-bezel-shell hidden">
+        <div class="double-bezel-core" style="padding: 24px;">
+          <h2 class="font-editorial gold-text" style="margin: 0 0 8px; font-size: 24px;">
+            3. Custom Statutory Article Redline Comparator (مقارنة النص القديم والجديد)
+          </h2>
+          <p style="margin: 0 0 16px; font-size: 12.5px; color: var(--ink-secondary);">
+            Compare any prior Moroccan statutory article with its newly promulgated Bulletin Officiel amendment to generate word-level redlines.
+          </p>
+
+          <div class="grid-2" style="margin-bottom: 16px;">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--ink-secondary); margin-bottom: 6px;">Old Statutory Text (النص السابق):</label>
+              <textarea id="custom-old-text" rows="4">Article 46 : Le capital de la société à responsabilité limitée doit être de 100.000 dirhams au moins et déposé en banque.</textarea>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--ink-secondary); margin-bottom: 6px;">New Bulletin Officiel Text (النص الجديد في الجريدة الرسمية):</label>
+              <textarea id="custom-new-text" rows="4">Article 46 : Le capital de la société à responsabilité limitée est librement fixé par les associés dans les statuts sans minimum légal.</textarea>
+            </div>
+          </div>
+
+          <button class="pill-btn active" onclick="computeCustomRedline()" data-testid="compute-diff-btn">
+            ⚡ Generate Word-Level Redline Diff
+          </button>
+
+          <div id="custom-diff-output" data-testid="custom-diff-output" style="margin-top: 18px;"></div>
+        </div>
+      </section>
+
+      <!-- ==================== WORKSPACE 4: MOROCCAN CONTRACT AUDITOR ==================== -->
+      <section id="workspace-contract" class="double-bezel-shell hidden">
+        <div class="double-bezel-core" style="padding: 24px;">
+          <h2 class="font-editorial gold-text" style="margin: 0 0 8px; font-size: 24px;">
+            4. Moroccan Contract &amp; Clause Compliance Auditor (افتحاص العقود المغربية)
+          </h2>
+          <p style="margin: 0 0 16px; font-size: 12.5px; color: var(--ink-secondary);">
+            Audits employment contracts (CDI/CDD), commercial leases, and privacy clauses against mandatory provisions of Code du Travail, DOC, and CNDP Loi 09-08.
+          </p>
+
+          <textarea id="contract-audit-input" data-testid="contract-audit-input" rows="6" style="margin-bottom: 14px;">CONTRAT DE TRAVAIL À DURÉE INDÉTERMINÉE (CDI)
+Article 1 : La période d'essai pour l'employé est fixée à 12 mois renouvelable deux fois.
+Article 2 : Le salarié renonce par avance à toute indemnité de licenciement abusif.
+Article 3 : Les données biométriques du salarié sont collectées sans déclaration préalable à la CNDP.</textarea>
+
+          <button class="pill-btn active" onclick="executeContractAudit()" data-testid="audit-contract-btn">
+            🛡️ Audit Contract Against Moroccan Law
+          </button>
+
+          <div id="contract-audit-output" data-testid="contract-audit-output" style="margin-top: 18px;"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      let currentLang = 'ar';
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        ['ar', 'darija', 'fr'].forEach((l) => {
+          document.getElementById('lang-' + l).classList.toggle('active', l === lang);
+        });
+        executeLegalQuery();
+      }
+
+      function switchTab(tab) {
+        ['qa', 'bo', 'diff', 'contract'].forEach((t) => {
+          document.getElementById('workspace-' + t).classList.toggle('hidden', t !== tab);
+          document.getElementById('tab-btn-' + t).classList.toggle('active', t === tab);
+        });
+        if (tab === 'bo') loadBoIssues();
+        if (tab === 'diff') computeCustomRedline();
+        if (tab === 'contract') executeContractAudit();
+      }
+
+      function runPresetQuery(q) {
+        document.getElementById('legal-query-input').value = q;
+        executeLegalQuery();
+      }
+
+      async function executeLegalQuery() {
+        const query = document.getElementById('legal-query-input').value;
+        const res = await fetch('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, lang: currentLang }),
+        });
+        const data = await res.json();
+
+        const metaBar = document.getElementById('qa-meta-bar');
+        const tr = data.query_translation || {};
+        metaBar.innerHTML = `
+          <span class="badge badge-verified">✅ Citations Verified: ${data.citation_verified ? 'TRUE' : 'FALSE'}</span>
+          <span class="badge badge-gold font-mono">Domain: ${data.detected_domain}</span>
+          <span class="badge badge-gold font-mono">Darija Bridge: ${tr.detected_darija ? 'ACTIVE (' + (tr.expanded_terms || []).slice(0, 3).join(', ') + ')' : 'Standard MSA/FR'}</span>
+          <span class="badge badge-gold font-mono">${data.retrieval_engine || 'BM25 + RRF'}</span>
+        `;
+
+        const citationsList = document.getElementById('verbatim-citations-list');
+        citationsList.innerHTML = (data.verbatim_citations || [])
+          .map(
+            (cit) => `
+          <div class="verbatim-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+              <strong class="font-editorial" style="font-size:19px;color:#fff5d6;">${cit.code} — ${cit.article}</strong>
+              <span class="font-mono" style="font-size:11px;color:#dfb860;">${cit.dahir} | ${cit.bo_issue} (${cit.publication_date}) | ${cit.law_number}</span>
+            </div>
+            <p dir="rtl" style="margin:6px 0;font-size:15px;line-height:1.7;color:#f6f1e6;"><strong>النص العربي الرسمي (حرفي):</strong> « ${cit.text_ar} »</p>
+            <p style="margin:6px 0 0;font-size:13.5px;line-height:1.6;color:#c5bca8;"><strong>Texte Officiel (FR) :</strong> « ${cit.text_fr} »</p>
+          </div>
+        `
+          )
+          .join('');
+
+        const comm = data.ai_commentary || {};
+        document.getElementById('ai-commentary-box').innerHTML = `
+          <div class="commentary-card">
+            <div dir="rtl" style="margin-bottom:10px;">
+              <strong style="color:#6ee7b7;">🇲🇦 الشرح بالدارجة المغربية (Moroccan Darija):</strong>
+              <p style="margin:4px 0;line-height:1.65;">${comm.darija || ''}</p>
+            </div>
+            <div dir="rtl" style="margin-bottom:10px;border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;">
+              <strong style="color:#fbe6b0;">📘 الشرح بالعربية الفصحى (MSA):</strong>
+              <p style="margin:4px 0;line-height:1.65;">${comm.ar || ''}</p>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;">
+              <strong style="color:#c5bca8;">🇫🇷 Synthèse Analytique (Français) :</strong>
+              <p style="margin:4px 0;line-height:1.6;color:#c5bca8;">${comm.fr || ''}</p>
+            </div>
+            <div style="margin-top:12px;font-size:11.5px;color:#dfb860;">${data.legal_disclaimer || ''}</div>
+          </div>
+        `;
+      }
+
+      async function loadBoIssues() {
+        const audience = document.getElementById('bo-audience-filter').value;
+        const res = await fetch('/api/bo-issues?audience=' + encodeURIComponent(audience));
+        const data = await res.json();
+        document.getElementById('kpi-bo-count').textContent = data.count + ' BO Issues';
+
+        const container = document.getElementById('bo-issues-container');
+        container.innerHTML = (data.issues || [])
+          .map(
+            (issue) => `
+          <div class="verbatim-card" style="margin-bottom:18px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+              <div>
+                <span class="badge badge-gold font-mono">${issue.bo_number} · ${issue.publication_date}</span>
+                <h3 class="font-editorial" style="margin:8px 0 4px;font-size:20px;color:#fff5d6;" dir="rtl">${issue.title_ar}</h3>
+                <div style="font-size:13px;color:#c5bca8;margin-bottom:10px;">${issue.title_fr || ''}</div>
+              </div>
+              <a href="${issue.source_url}" target="_blank" rel="noopener" class="font-mono" style="font-size:11px;color:#6ee7b7;">🔗 sgg.gov.ma ↗</a>
+            </div>
+            ${(issue.amendments || [])
+              .map(
+                (am) => `
+              <div style="background:#080c0a;border:1px solid rgba(223,184,96,0.18);border-radius:12px;padding:14px;margin-top:10px;">
+                <div class="font-mono" style="font-size:11.5px;color:#dfb860;margin-bottom:8px;">
+                  ${am.article_ref} · Severity: <strong>${am.redline_diff?.compliance_severity || 'HIGH'}</strong> (Change Ratio: ${Math.round((am.redline_diff?.change_ratio || 0) * 100)}%)
+                </div>
+                <div style="line-height:1.75;font-size:13.5px;margin-bottom:12px;">${am.redline_diff?.redline_html || ''}</div>
+                <div class="grid-3">
+                  <div style="background:#101714;padding:10px;border-radius:10px;font-size:12px;" dir="rtl">
+                    <strong style="color:#6ee7b7;">🇲🇦 بالدارجة:</strong><br/>${am.summary_darija || ''}
+                  </div>
+                  <div style="background:#101714;padding:10px;border-radius:10px;font-size:12px;" dir="rtl">
+                    <strong style="color:#fbe6b0;">📘 بالعربية:</strong><br/>${am.summary_ar || ''}
+                  </div>
+                  <div style="background:#101714;padding:10px;border-radius:10px;font-size:12px;">
+                    <strong style="color:#c5bca8;">🇫🇷 En Français :</strong><br/>${am.summary_fr || ''}
+                  </div>
+                </div>
+              </div>
+            `
+              )
+              .join('')}
+          </div>
+        `
+          )
+          .join('');
+      }
+
+      async function computeCustomRedline() {
+        const old_text = document.getElementById('custom-old-text').value;
+        const new_text = document.getElementById('custom-new-text').value;
+        const res = await fetch('/api/bo-diff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ old_text, new_text }),
+        });
+        const diff = await res.json();
+        document.getElementById('custom-diff-output').innerHTML = `
+          <div class="verbatim-card">
+            <div class="font-mono" style="font-size:12px;color:#dfb860;margin-bottom:8px;">
+              Compliance Severity: <strong>${diff.compliance_severity}</strong> · Change Ratio: <strong>${Math.round((diff.change_ratio || 0) * 100)}%</strong>
+            </div>
+            <div style="font-size:15px;line-height:1.8;">${diff.redline_html}</div>
+          </div>
+        `;
+      }
+
+      async function executeContractAudit() {
+        const contract_text = document.getElementById('contract-audit-input').value;
+        const res = await fetch('/api/audit-contract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contract_text, lang: currentLang === 'fr' ? 'fr' : 'ar' }),
+        });
+        const report = await res.json();
+        document.getElementById('contract-audit-output').innerHTML = `
+          <div class="verbatim-card">
+            <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;">
+              <span class="badge badge-gold font-mono">Risk Score: ${report.risk_score} / 100</span>
+              <span class="badge badge-verified font-mono">Status: ${report.status}</span>
+            </div>
+            ${(report.violations || [])
+              .map(
+                (v) => `
+              <div style="background:#1c1110;border-left:4px solid #c24136;padding:12px;border-radius:10px;margin-bottom:10px;">
+                <strong style="color:#fca5a5;">🚨 ${v.severity} — ${v.statutory_reference}</strong>
+                <div style="font-size:13px;margin-top:4px;color:#f6f1e6;">${v.title}</div>
+                <div style="font-size:12px;margin-top:4px;color:#6ee7b7;">✔ Remediation: ${v.remediation}</div>
+              </div>
+            `
+              )
+              .join('')}
+          </div>
+        `;
+      }
+
+      // Initial load
+      executeLegalQuery();
+    </script>
+  </body>
+</html>

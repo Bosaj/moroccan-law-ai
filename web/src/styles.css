@@ -1,0 +1,305 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+
+/* Bouazzi Maghribi (Mohamed Gallah, MIT) — Moroccan Maghribi calligraphy, used only for the Arabic
+   brand mark and display lines. Statutory Arabic stays in IBM Plex Sans Arabic for legibility. */
+@font-face {
+  font-family: 'Bouazzi Maghribi';
+  src: url('/fonts/BouazziMaghribi.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+  size-adjust: 140%;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
+}
+
+@theme inline {
+  --font-sans: 'Geist Variable', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+  --font-maghribi: 'Bouazzi Maghribi', 'IBM Plex Sans Arabic', serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-del: var(--del);
+  --color-del-soft: var(--del-soft);
+  --color-ins: var(--ins);
+  --color-ins-soft: var(--ins-soft);
+  --color-sev-crit: var(--sev-crit);
+  --color-sev-high: var(--sev-high);
+}
+
+/* Warm charcoal "chambers" palette with a single brass accent. Dark is the default. */
+:root,
+:root[data-theme='dark'] {
+  --canvas: #12110f;
+  --surface: #1a1917;
+  --surface-2: #22201d;
+  --line: #2c2a26;
+  --line-strong: #3d3a34;
+  --ink: #ece7de;
+  --ink-2: #b6afa3;
+  --ink-3: #8d877c;
+  --accent: #c8a45c;
+  --accent-ink: #1a1408;
+  --accent-soft: rgb(200 164 92 / 0.12);
+  --del: #e0969a;
+  --del-soft: rgb(180 83 90 / 0.18);
+  --ins: #93c4a3;
+  --ins-soft: rgb(91 140 106 / 0.18);
+  --sev-crit: #e0827f;
+  --sev-high: #d49a5a;
+  --shadow-pop: 0 24px 48px -28px rgb(0 0 0 / 0.65);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --canvas: #f5f2ec;
+  --surface: #fffdf9;
+  --surface-2: #efebe3;
+  --line: #e2dccf;
+  --line-strong: #cdc5b4;
+  --ink: #1d1b17;
+  --ink-2: #4f4a41;
+  --ink-3: #6d675b;
+  --accent: #86661f;
+  --accent-ink: #fffaf0;
+  --accent-soft: rgb(134 102 31 / 0.1);
+  --del: #98343c;
+  --del-soft: rgb(152 52 60 / 0.1);
+  --ins: #386749;
+  --ins-soft: rgb(56 103 73 / 0.12);
+  --sev-crit: #a8353d;
+  --sev-high: #9a5b1c;
+  --shadow-pop: 0 24px 48px -28px rgb(60 44 20 / 0.35);
+  color-scheme: light;
+}
+
+html {
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background:
+    radial-gradient(900px 480px at 8% -10%, var(--accent-soft), transparent 70%),
+    var(--canvas);
+}
+
+html[lang='ar'] body {
+  line-height: 1.8;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+button,
+[role='tab'],
+select {
+  cursor: pointer;
+}
+
+/* Small uppercase labels. No letter-spacing in Arabic, where it breaks the joined letters. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+html[lang='ar'] .eyebrow {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.8125rem;
+}
+
+.statute-ar {
+  font-family: 'IBM Plex Sans Arabic', var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 2.05;
+}
+
+.statute-fr {
+  font-size: 0.975rem;
+  line-height: 1.75;
+}
+
+.field {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.field::placeholder {
+  color: var(--ink-3);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.7rem 1.1rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border: 1px solid transparent;
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), filter 160ms ease;
+}
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink-2);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+.btn-quiet:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.btn-quiet:active {
+  transform: scale(0.97);
+}
+
+/* Redline marks use colour AND a line style so they do not rely on colour alone. */
+.mark-del {
+  background: var(--del-soft);
+  color: var(--del);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.mark-ins {
+  background: var(--ins-soft);
+  color: var(--ins);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* Skeleton shimmer: only transform animates. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+  border-radius: 0.5rem;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.06), transparent);
+  animation: shimmer 1.4s infinite;
+}
+html[dir='rtl'] .skeleton::after {
+  animation-direction: reverse;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Status dot: breathing ring, isolated so it never re-renders the layout. */
+.pulse-dot {
+  position: relative;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--ins);
+}
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: breathe 2.4s ease-out infinite;
+}
+.pulse-dot[data-off='true'] {
+  background: var(--sev-crit);
+}
+.pulse-dot[data-off='true']::after {
+  animation: none;
+}
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
