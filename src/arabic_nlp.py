@@ -69,7 +69,7 @@ class MoroccanLegalNLP:
             "fr_terms": ["congé de bail", "procédure d'expulsion", "Loi 67-12 baux d'habitation"],
         },
         {
-            "patterns": ["شيك بدون رصيد", "شيك خاوي", "cheque bla rssid", "cheque sans provision"],
+            "patterns": ["شيك بدون رصيد", "شيك خاوي", "cheque bla rssid", "cheque bla rassid", "cheque khawi", "cheque sans provision"],
             "domain": "commercial_law",
             "msa_terms": ["إصدار شيك بدون مؤونة", "مدونة التجارة المادة 316"],
             "fr_terms": ["émission de chèque sans provision", "Code de Commerce Article 316"],
