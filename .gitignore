@@ -21,3 +21,5 @@ data/laws_pdf/**/*.pdf
 data/laws_pdf/*.part
 !data/laws_pdf/manifest.json
 *.db
+data/adala_cache/
+.venv/
