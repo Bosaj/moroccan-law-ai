@@ -77,7 +77,8 @@ def test_fullstack_api_endpoints():
     assert status == 200
     assert health["status"] == "ok"
     assert health["bo_issues_count"] >= 15
-    assert "Hybrid Okapi BM25" in health["retrieval_engine"]
+    assert "BM25" in health["retrieval_engine"]
+    assert health["corpus_articles_count"] > 10000
 
     status_issues, bo_list = process_api_request("GET", "/api/bo-issues")
     assert status_issues == 200

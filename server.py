@@ -1,8 +1,8 @@
 """
 Moroccan Law AI & Official Gazette (Jarida Rasmiya) Redline Engine — Full-Stack Server
 Serves:
-- REST API (/api/health, /api/query, /api/bo-issues, /api/bo-diff, /api/audit-contract)
-- Persistent SQLite Audit & Consultation Store (data/legal_audit.db)
+- REST API (/api/health, /api/query, /api/laws, /api/law, /api/article, /api/catalog, /api/bo-issues, /api/bo-diff, /api/audit-contract)
+- Usage counters in SQLite (MIZAN_STATS_DB, default data/legal_audit.db). Questions themselves are never stored.
 - The React front end ("Mizan") built into web/dist (run `npm run build` inside web/)
 """
 
@@ -10,6 +10,7 @@ import json
 import mimetypes
 import os
 import sqlite3
+import tempfile
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Optional
@@ -17,15 +18,15 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from src.bo_diff_engine import BulletinOfficielDiffEngine
 from src.contract_auditor import MoroccanContractAuditor
-from src.legal_rag import MoroccanLegalRAG
+from src.legal_rag import MoroccanLegalRAG, _article_label
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-PDF_DIR = os.path.join(DATA_DIR, "laws_pdf")
 STATIC_DIR = os.path.join(BASE_DIR, "web", "dist")
-DB_PATH = os.path.join(DATA_DIR, "legal_audit.db")
+DB_PATH = os.environ.get("MIZAN_STATS_DB") or os.path.join(DATA_DIR, "legal_audit.db")
 
 MAX_BODY_BYTES = 1_000_000
+MAX_QUESTION_CHARS = 2_000
 
 mimetypes.add_type("font/woff2", ".woff2")
 mimetypes.add_type("application/manifest+json", ".webmanifest")
@@ -46,14 +47,24 @@ bo_engine = BulletinOfficielDiffEngine()
 contract_auditor = MoroccanContractAuditor()
 
 
+def _stats_connection() -> sqlite3.Connection:
+    """Counters live on local disk; where that is read-only they fall back to the temp directory."""
+    try:
+        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute("CREATE TABLE IF NOT EXISTS _probe (x INTEGER)")
+    except (OSError, sqlite3.Error):
+        conn = sqlite3.connect(os.path.join(tempfile.gettempdir(), "mizan_stats.db"))
+    return conn
+
+
 def init_db() -> None:
-    os.makedirs(DATA_DIR, exist_ok=True)
-    with sqlite3.connect(DB_PATH) as conn:
+    with _stats_connection() as conn:
+        # A legal question can reveal a private situation, so only its shape is counted, never its words
         conn.execute(
             """
-            CREATE TABLE IF NOT EXISTS consultations (
+            CREATE TABLE IF NOT EXISTS consultation_stats (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                query TEXT NOT NULL,
                 lang TEXT NOT NULL,
                 domain TEXT NOT NULL,
                 verified INTEGER NOT NULL,
@@ -76,19 +87,19 @@ def init_db() -> None:
         conn.commit()
 
 
-def log_consultation(query: str, lang: str, domain: str, verified: bool, count: int) -> None:
+def log_consultation(lang: str, domain: str, verified: bool, count: int) -> None:
     init_db()
-    with sqlite3.connect(DB_PATH) as conn:
+    with _stats_connection() as conn:
         conn.execute(
-            "INSERT INTO consultations (query, lang, domain, verified, citations_count, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-            (query, lang, domain, 1 if verified else 0, count, datetime.now(timezone.utc).isoformat()),
+            "INSERT INTO consultation_stats (lang, domain, verified, citations_count, created_at) VALUES (?, ?, ?, ?, ?)",
+            (lang, domain, 1 if verified else 0, count, datetime.now(timezone.utc).isoformat()),
         )
         conn.commit()
 
 
 def log_contract_audit(status: str, risk_score: int, violations_count: int) -> None:
     init_db()
-    with sqlite3.connect(DB_PATH) as conn:
+    with _stats_connection() as conn:
         conn.execute(
             "INSERT INTO contract_audits (status, risk_score, violations_count, created_at) VALUES (?, ?, ?, ?)",
             (status, risk_score, violations_count, datetime.now(timezone.utc).isoformat()),
@@ -98,8 +109,8 @@ def log_contract_audit(status: str, risk_score: int, violations_count: int) -> N
 
 def get_audit_stats() -> dict:
     init_db()
-    with sqlite3.connect(DB_PATH) as conn:
-        c_count = conn.execute("SELECT COUNT(*) FROM consultations").fetchone()[0]
+    with _stats_connection() as conn:
+        c_count = conn.execute("SELECT COUNT(*) FROM consultation_stats").fetchone()[0]
         a_count = conn.execute("SELECT COUNT(*) FROM contract_audits").fetchone()[0]
     return {"consultations_logged": c_count, "contract_audits_logged": a_count}
 
@@ -135,8 +146,11 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
         return 200, {
             "status": "ok",
             "app": "moroccan-law-ai",
-            "retrieval_engine": "Hybrid Okapi BM25 + Trigram Vector RRF (k=60)",
-            "corpus_articles_count": len(rag_engine.db),
+            "retrieval_engine": rag_engine.retrieval_engine,
+            "corpus_articles_count": rag_engine.article_count,
+            "corpus_laws_count": len(rag_engine.corpus.laws),
+            "catalog_documents_count": int(rag_engine.corpus.meta.get("catalog_documents", 0)),
+            "corpus_built_at": rag_engine.corpus.meta.get("built_at", ""),
             "bo_issues_count": len(bo_engine.list_bo_issues()),
             **stats,
         }
@@ -148,11 +162,12 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
 
     if route == "/api/query" and method == "POST":
         payload = _json_body(body_bytes)
-        query = str(payload.get("query", "")).strip() or "ما هي حقوق الأجير في حالة الطرد التعسفي؟"
+        query = str(payload.get("query", "")).strip()[:MAX_QUESTION_CHARS]
+        if not query:
+            raise BadRequest("Ask a question: the query field is empty")
         lang = str(payload.get("lang", "ar")).strip()
         res = rag_engine.answer_query(query, lang=lang)
         log_consultation(
-            query=query,
             lang=lang,
             domain=res["domain"],
             verified=res["citation_verified"],
@@ -187,10 +202,45 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
         )
         return 200, report
 
-    if route == "/api/laws-pdf" and method == "GET":
-        from src.download_laws import get_law_manifest
-        manifest = get_law_manifest()
-        return 200, manifest
+    if route == "/api/laws" and method == "GET":
+        laws = sorted(rag_engine.corpus.laws.values(), key=lambda law: (law["domain"], law["title_fr"]))
+        return 200, {"count": len(laws), "built_at": rag_engine.corpus.meta.get("built_at", ""), "laws": laws}
+
+    if route == "/api/article" and method == "GET":
+        law = qs.get("law", [""])[0]
+        number = qs.get("number", [""])[0]
+        if law not in rag_engine.corpus.laws:
+            return 404, {"error": "Unknown law"}
+        citation = rag_engine.citation(law, number)
+        if citation is None:
+            return 404, {"error": "No such article in this law"}
+        return 200, citation
+
+    if route == "/api/law" and method == "GET":
+        law = qs.get("law", [""])[0]
+        if law not in rag_engine.corpus.laws:
+            return 404, {"error": "Unknown law"}
+        lang = qs.get("lang", ["ar"])[0]
+        rows = rag_engine.corpus.law_articles(law, "fr" if lang == "fr" else "ar")
+        return 200, {
+            "law": rag_engine.corpus.laws[law],
+            "articles": [
+                {
+                    "number": r["number"],
+                    "label": _article_label(r["kind"], r["number"])[1 if lang == "fr" else 0],
+                    "section": r["section"],
+                    "page": r["page_from"],
+                    "text": r["text"],
+                }
+                for r in rows
+            ],
+        }
+
+    if route == "/api/catalog" and method == "GET":
+        query = qs.get("q", [""])[0].strip()[:MAX_QUESTION_CHARS]
+        lang = qs.get("lang", [None])[0]
+        documents = rag_engine.corpus.search_catalog(query, lang=lang if lang in ("ar", "fr") else None)
+        return 200, {"count": len(documents), "documents": documents}
 
     return 404, {"error": f"Unknown API endpoint: {route}"}
 
@@ -214,17 +264,6 @@ def resolve_static(url_path: str) -> Optional[str]:
     if os.path.splitext(clean)[1] == "":
         index = os.path.join(root, "index.html")
         return index if os.path.isfile(index) else None
-    return None
-
-
-def resolve_pdf(url_path: str) -> Optional[str]:
-    """Maps a /data/laws_pdf/... request to an authorized PDF inside PDF_DIR."""
-    root = os.path.realpath(PDF_DIR)
-    clean = unquote(urlparse(url_path).path)
-    rel = clean.replace("/data/laws_pdf/", "").lstrip("/\\")
-    candidate = os.path.realpath(os.path.join(root, rel))
-    if candidate.startswith(root + os.sep) and os.path.isfile(candidate) and candidate.endswith(".pdf"):
-        return candidate
     return None
 
 
@@ -269,14 +308,6 @@ class MoroccanLawHTTPRequestHandler(BaseHTTPRequestHandler):
             self._send_json(code, payload)
             return
 
-        if self.path.startswith("/data/laws_pdf/"):
-            pdf_target = resolve_pdf(self.path)
-            if pdf_target:
-                self._send_file(pdf_target)
-                return
-            self._send_json(404, {"error": "Official Law PDF not found or not yet synchronized"})
-            return
-
         target = resolve_static(self.path)
         if target:
             self._send_file(target)
@@ -310,7 +341,8 @@ class MoroccanLawHTTPRequestHandler(BaseHTTPRequestHandler):
 
 def run_server(port: int = 8090) -> None:
     init_db()
-    server = ThreadingHTTPServer(("127.0.0.1", port), MoroccanLawHTTPRequestHandler)
+    host = os.environ.get("HOST", "127.0.0.1")
+    server = ThreadingHTTPServer((host, port), MoroccanLawHTTPRequestHandler)
     print(f"Mizan (moroccan-law-ai) running on http://localhost:{port}")
     try:
         server.serve_forever()

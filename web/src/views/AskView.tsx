@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { CircleNotch, MagnifyingGlass, Quotes, SealCheck, Warning } from '@phosphor-icons/react'
+import { ArrowSquareOut, CircleNotch, MagnifyingGlass, Quotes, SealCheck, Warning } from '@phosphor-icons/react'
 import { api } from '../lib/api'
 import { labelOf, useI18n } from '../lib/i18n'
-import { formatDate, textDir } from '../lib/redline'
-import type { AnswerLang, Citation, QueryResult } from '../lib/types'
+import { textDir } from '../lib/redline'
+import type { AnswerLang, Citation, Health, QueryResult } from '../lib/types'
 import { PageHeader } from '../components/PageHeader'
 import { Segmented } from '../components/ui/Segmented'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
@@ -25,43 +25,70 @@ function defaultAnswerLang(ui: 'fr' | 'ar' | 'en'): AnswerLang {
   return ui === 'ar' ? 'ar' : 'fr'
 }
 
+function SourceLink({ href, page, label }: { href: string; page: number | null; label: string }) {
+  const { s } = useI18n()
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-accent underline-offset-4 hover:underline"
+    >
+      <ArrowSquareOut size={16} aria-hidden="true" />
+      {label}
+      {page != null && (
+        <span className="font-mono text-xs text-ink-3">
+          {s.ask.page} {page}
+        </span>
+      )}
+    </a>
+  )
+}
+
 function CitationItem({ c, index, answerLang }: { c: Citation; index: number; answerLang: AnswerLang }) {
   const { s, lang } = useI18n()
-  const initial = answerLang === 'fr' ? 'fr' : 'ar'
+  const preferred = answerLang === 'fr' ? 'fr' : 'ar'
+  const initial = preferred === 'fr' && !c.text_fr ? 'ar' : preferred === 'ar' && !c.text_ar ? 'fr' : preferred
+  const french = lang !== 'ar'
   return (
     <article className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 border-t border-line py-6 first:border-t-0 first:pt-0">
       <span className="pt-0.5 font-mono text-sm tabular-nums text-accent">{String(index + 1).padStart(2, '0')}</span>
       <div className="min-w-0">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <h3 className="font-semibold text-ink" dir="auto">
-            {c.code}
-          </h3>
-          {typeof c.rrf_score === 'number' && (
-            <span className="font-mono text-xs tabular-nums text-ink-3" title={s.ask.relevance}>
-              {s.ask.relevance} {c.rrf_score.toFixed(4)}
-            </span>
-          )}
-        </div>
+        <h3 className="font-semibold text-ink" dir="auto">
+          {french ? c.code_fr : c.code_ar}
+        </h3>
         <p className="mt-1 text-sm font-medium text-ink-2" dir="auto">
-          {c.article}
+          {french ? c.article_fr : c.article}
         </p>
+        {c.section && (
+          <p className="mt-1 text-xs text-ink-3" dir="auto">
+            {c.section.split(' · ').slice(-1)[0]}
+          </p>
+        )}
         <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs text-ink-3">
           <div className="flex gap-1.5">
             <dt>{s.ask.law}</dt>
-            <dd className="text-ink-2">{c.law_number}</dd>
+            <dd className="text-ink-2" dir="ltr">
+              {c.law_number}
+            </dd>
           </div>
-          <div className="flex gap-1.5">
-            <dt>{c.bo_issue.split(' ')[0]}</dt>
-            <dd className="text-ink-2">{c.bo_issue.replace(/^BO\s*/, '')}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt>{s.ask.published}</dt>
-            <dd className="text-ink-2">{formatDate(c.publication_date, lang)}</dd>
-          </div>
+          {c.dahir && (
+            <div className="flex gap-1.5">
+              <dt>{s.ask.dahir}</dt>
+              <dd className="text-ink-2" dir="ltr">
+                {c.dahir}
+              </dd>
+            </div>
+          )}
+          {c.consolidated_ar && (
+            <div className="flex gap-1.5">
+              <dt>{s.ask.consolidated}</dt>
+              <dd className="text-ink-2" dir="auto">
+                {c.consolidated_ar}
+              </dd>
+            </div>
+          )}
         </dl>
-        <p className="mt-1 font-mono text-xs text-ink-3" dir="auto">
-          {c.dahir}
-        </p>
 
         <Tabs defaultValue={initial} className="mt-4">
           <TabsList>
@@ -72,15 +99,33 @@ function CitationItem({ c, index, answerLang }: { c: Citation; index: number; an
               {s.ask.textAr}
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="fr" className="pt-4">
-            <blockquote lang="fr" dir="ltr" className="statute-fr border-s-2 border-accent/60 ps-4 text-ink">
-              {c.text_fr}
-            </blockquote>
+          <TabsContent value="fr" className="space-y-3 pt-4">
+            {c.text_fr ? (
+              <>
+                <blockquote lang="fr" dir="ltr" className="statute-fr whitespace-pre-line border-s-2 border-accent/60 ps-4 text-ink">
+                  {c.text_fr}
+                </blockquote>
+                <p className="text-xs text-ink-3">
+                  {s.ask.frenchOlder}
+                  {c.consolidated_fr ? ` ${s.ask.consolidated} ${c.consolidated_fr}.` : ''}
+                </p>
+                <SourceLink href={c.source_url_fr} page={c.page_fr} label={s.ask.openSource} />
+              </>
+            ) : (
+              <p className="text-sm text-ink-3">{s.ask.noFrench}</p>
+            )}
           </TabsContent>
-          <TabsContent value="ar" className="pt-4">
-            <blockquote lang="ar" dir="rtl" className="statute-ar border-s-2 border-accent/60 ps-4 text-ink">
-              {c.text_ar}
-            </blockquote>
+          <TabsContent value="ar" className="space-y-3 pt-4">
+            {c.text_ar ? (
+              <>
+                <blockquote lang="ar" dir="rtl" className="statute-ar whitespace-pre-line border-s-2 border-accent/60 ps-4 text-ink">
+                  {c.text_ar}
+                </blockquote>
+                <SourceLink href={c.source_url_ar} page={c.page_ar} label={s.ask.openSource} />
+              </>
+            ) : (
+              <p className="text-sm text-ink-3">{s.ask.noArabic}</p>
+            )}
           </TabsContent>
         </Tabs>
       </div>
@@ -88,7 +133,7 @@ function CitationItem({ c, index, answerLang }: { c: Citation; index: number; an
   )
 }
 
-function Results({ result, answerLang }: { result: QueryResult; answerLang: AnswerLang }) {
+function Results({ result, answerLang, health }: { result: QueryResult; answerLang: AnswerLang; health: Health | null }) {
   const { s } = useI18n()
   const t = result.query_translation
   const commentary = result.ai_commentary[answerLang]
@@ -141,7 +186,12 @@ function Results({ result, answerLang }: { result: QueryResult; answerLang: Answ
           </div>
           <p className="-mt-3 mb-6 text-sm text-ink-3">{s.ask.sourcesNote}</p>
           {result.verbatim_citations.length === 0 ? (
-            <p className="text-ink-2">{s.ask.noResults}</p>
+            <div className="space-y-3">
+              <p className="text-ink-2">{s.ask.noResults}</p>
+              <a href={`#/laws?q=${encodeURIComponent(result.query)}`} className="btn-primary inline-flex">
+                {s.ask.tryCatalog}
+              </a>
+            </div>
           ) : (
             <div>
               {result.verbatim_citations.map((c, i) => (
@@ -175,7 +225,7 @@ function Results({ result, answerLang }: { result: QueryResult; answerLang: Answ
 
       <BlurFade delay={0.18}>
         <div className="space-y-2">
-          <p className="text-xs text-ink-3">{s.ask.corpusLimit}</p>
+          {health && <p className="text-xs text-ink-3">{s.ask.corpusLimit(health.corpus_articles_count, health.corpus_laws_count)}</p>}
           <Disclaimer text={result.legal_disclaimer} />
         </div>
       </BlurFade>
@@ -183,7 +233,7 @@ function Results({ result, answerLang }: { result: QueryResult; answerLang: Answ
   )
 }
 
-export function AskView() {
+export function AskView({ health }: { health: Health | null }) {
   const { s, lang } = useI18n()
   const [query, setQuery] = useState('')
   const [answerLang, setAnswerLang] = useState<AnswerLang>(defaultAnswerLang(lang))
@@ -312,7 +362,7 @@ export function AskView() {
             </div>
           )}
           {phase === 'error' && <ErrorPanel error={error} onRetry={() => void run()} />}
-          {phase === 'done' && result && <Results result={result} answerLang={answerLang} />}
+          {phase === 'done' && result && <Results result={result} answerLang={answerLang} health={health} />}
         </section>
       </div>
     </div>

@@ -2,7 +2,10 @@ import type {
   AnswerLang,
   AuditResult,
   BoIssue,
+  CatalogDocument,
   Health,
+  Law,
+  LawArticle,
   QueryResult,
   RedlineDiff,
 } from './types'
@@ -48,6 +51,11 @@ const post = <T>(path: string, payload: unknown, signal?: AbortSignal) =>
 
 export const api = {
   health: () => request<Health>('/api/health'),
+  laws: () => request<{ count: number; built_at: string; laws: Law[] }>('/api/laws'),
+  law: (slug: string, lang: 'ar' | 'fr', signal?: AbortSignal) =>
+    request<{ law: Law; articles: LawArticle[] }>(`/api/law?law=${encodeURIComponent(slug)}&lang=${lang}`, { signal }),
+  catalog: (q: string, signal?: AbortSignal) =>
+    request<{ count: number; documents: CatalogDocument[] }>(`/api/catalog?q=${encodeURIComponent(q)}`, { signal }),
   boIssues: async () => (await request<{ count: number; issues: BoIssue[] }>('/api/bo-issues')).issues,
   query: (query: string, lang: AnswerLang, signal?: AbortSignal) =>
     post<QueryResult>('/api/query', { query, lang }, signal),

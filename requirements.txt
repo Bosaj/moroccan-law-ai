@@ -1,5 +1,2 @@
-streamlit>=1.35.0
-pydantic>=2.7.0
-numpy>=1.26.0
-python-dotenv>=1.0.0
+# The server runs on the standard library alone.
 pytest>=8.0.0
