@@ -1,5 +1,6 @@
 import json
 import unittest
+from urllib.parse import quote
 
 from server import process_api_request
 
@@ -64,41 +65,49 @@ class TestServerRoutes(unittest.TestCase):
         self.assertGreater(payload["risk_score"], 0)
         self.assertGreater(len(payload["violations"]), 0)
 
-    def test_laws_pdf_endpoint(self):
-        status, payload = process_api_request("GET", "/api/laws-pdf")
+    def test_laws_endpoint_lists_the_corpus(self):
+        status, payload = process_api_request("GET", "/api/laws")
         self.assertEqual(status, 200)
-        self.assertIn("laws", payload)
-        self.assertGreaterEqual(payload["total_files_downloaded"], 20)
+        self.assertEqual(payload["count"], len(payload["laws"]))
+        labor = next(law for law in payload["laws"] if law["slug"] == "labor")
+        self.assertEqual(labor["count_ar"], 589)
+        self.assertTrue(labor["url_ar"].startswith("https://adala.justice.gov.ma/"))
 
-    def test_pdf_resolution(self):
-        from server import resolve_pdf
-        pdf_file = resolve_pdf("/data/laws_pdf/ar/code_famille_moudawana_loi_70_03_ar.pdf")
-        self.assertIsNotNone(pdf_file)
-        self.assertTrue(pdf_file.endswith(".pdf"))
-
-        # Traversal attempts must be blocked
-        traversal = resolve_pdf("/data/laws_pdf/../../server.py")
-        self.assertIsNone(traversal)
-
-    def test_unknown_route(self):
-        status, payload = process_api_request("GET", "/api/nonexistent")
+    def test_law_endpoint_returns_its_articles(self):
+        status, payload = process_api_request("GET", "/api/law?law=commercial-lease&lang=ar")
+        self.assertEqual(status, 200)
+        self.assertEqual(len(payload["articles"]), 38)
+        self.assertTrue(payload["articles"][0]["label"].startswith("المادة"))
+        status, _ = process_api_request("GET", "/api/law?law=no-such-law")
         self.assertEqual(status, 404)
+
+    def test_article_endpoint(self):
+        status, payload = process_api_request("GET", "/api/article?law=family&number=19")
+        self.assertEqual(status, 200)
+        self.assertIn("أهلية الزواج", payload["text_ar"])
+        status, _ = process_api_request("GET", "/api/article?law=family&number=9999")
+        self.assertEqual(status, 404)
+
+    def test_catalog_endpoint(self):
+        status, payload = process_api_request("GET", "/api/catalog?q=" + quote("مدونة الشغل"))
+        self.assertEqual(status, 200)
+        self.assertGreater(payload["count"], 0)
+        status, payload = process_api_request("GET", "/api/catalog?q=")
+        self.assertEqual(payload["count"], 0)
+
+    def test_empty_question_is_refused(self):
+        status, payload = process_api_request("POST", "/api/query", json.dumps({"query": "  "}).encode())
+        self.assertEqual(status, 400)
         self.assertIn("error", payload)
 
-    def test_static_resolution(self):
-        from server import resolve_static
-        root_file = resolve_static("/")
-        self.assertIsNotNone(root_file)
-        self.assertTrue(root_file.endswith("index.html"))
+    def test_questions_are_not_stored(self):
+        secret = "سؤال خاص جدا عن طلاقي"
+        process_api_request("POST", "/api/query", json.dumps({"query": secret, "lang": "ar"}).encode())
+        from server import _stats_connection
 
-        # Client-side routing paths should fallback to index.html
-        route_file = resolve_static("/ask")
-        self.assertIsNotNone(route_file)
-        self.assertTrue(route_file.endswith("index.html"))
-
-        # Traversal attempts must be blocked
-        traversal = resolve_static("/../../etc/passwd")
-        self.assertIsNone(traversal)
+        with _stats_connection() as conn:
+            columns = [row[1] for row in conn.execute("PRAGMA table_info(consultation_stats)")]
+        self.assertNotIn("query", columns)
 
 
 if __name__ == "__main__":

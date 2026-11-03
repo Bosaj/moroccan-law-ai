@@ -2,14 +2,12 @@ import json
 import os
 import unittest
 from server import (
-    PDF_DIR,
     STATIC_DIR,
     get_audit_stats,
     init_db,
     log_consultation,
     log_contract_audit,
     process_api_request,
-    resolve_pdf,
     resolve_static,
 )
 
@@ -25,35 +23,13 @@ class TestServerSecurityAndApiDeep(unittest.TestCase):
         initial_audits = initial_stats["contract_audits_logged"]
 
         # Log a consultation
-        log_consultation("délai de préavis", "fr", "labor_law", True, 2)
+        log_consultation("fr", "labor_law", True, 2)
         # Log a contract audit
         log_contract_audit("NON_COMPLIANT_HIGH_RISK", 85, 3)
 
         new_stats = get_audit_stats()
         self.assertEqual(new_stats["consultations_logged"], initial_consultations + 1)
         self.assertEqual(new_stats["contract_audits_logged"], initial_audits + 1)
-
-    def test_resolve_pdf_path_traversal_guards(self):
-        # Valid PDF path within PDF_DIR should resolve
-        sample_pdf = os.path.join(PDF_DIR, "ar", "code_famille_moudawana_loi_70_03_ar.pdf")
-        if os.path.isfile(sample_pdf):
-            resolved = resolve_pdf("/data/laws_pdf/ar/code_famille_moudawana_loi_70_03_ar.pdf")
-            self.assertIsNotNone(resolved)
-            self.assertEqual(os.path.normpath(resolved), os.path.normpath(sample_pdf))
-
-        # Traversal attacks must all return None
-        traversal_attempts = [
-            "/data/laws_pdf/../../server.py",
-            "/data/laws_pdf/..\\..\\server.py",
-            "/data/laws_pdf/%2e%2e/%2e%2e/server.py",
-            "/data/laws_pdf/../../../etc/passwd",
-            "/data/laws_pdf/C:/Windows/System32/cmd.exe",
-            "/server.py",
-            "../../data/legal_audit.db",
-        ]
-        for attempt in traversal_attempts:
-            res = resolve_pdf(attempt)
-            self.assertIsNone(res, f"Path traversal should have been blocked for: {attempt}")
 
     def test_resolve_static_path_traversal_and_spa_routing(self):
         index_file = os.path.join(STATIC_DIR, "index.html")
@@ -83,7 +59,7 @@ class TestServerSecurityAndApiDeep(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertTrue(res_fr["citation_verified"])
         self.assertIn("response", res_fr)
-        self.assertIn("Code du Travail", res_fr["response"])
+        self.assertIn("Code du travail", res_fr["response"])
 
         # 2. Arabic query
         body_ar = json.dumps({"query": "ما هو أجل الإخطار قبل إنهاء عقد الشغل؟", "lang": "ar"}).encode("utf-8")
@@ -111,12 +87,11 @@ class TestServerSecurityAndApiDeep(unittest.TestCase):
         self.assertEqual(status_arr, 400)
         self.assertIn("error", res_arr)
 
-        # Empty query string falls back gracefully to default Moroccan labor query
+        # An empty question gets a clear refusal, not an answer to something it did not ask
         body_empty = json.dumps({"query": "", "lang": "fr"}).encode("utf-8")
         status, res = process_api_request("POST", "/api/query", body_empty)
-        self.assertEqual(status, 200)
-        self.assertTrue(res["citation_verified"])
-        self.assertGreater(len(res["verbatim_citations"]), 0)
+        self.assertEqual(status, 400)
+        self.assertIn("error", res)
 
     def test_bo_issues_audience_filtering(self):
         status, res = process_api_request("GET", "/api/bo-issues?audience=citizens")

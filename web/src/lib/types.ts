@@ -7,6 +7,9 @@ export interface Health {
   app: string
   retrieval_engine: string
   corpus_articles_count: number
+  corpus_laws_count: number
+  catalog_documents_count: number
+  corpus_built_at: string
   bo_issues_count: number
   consultations_logged: number
   contract_audits_logged: number
@@ -14,16 +17,65 @@ export interface Health {
 
 export interface Citation {
   id: string
+  law: string
   code: string
+  code_ar: string
+  code_fr: string
   law_number: string
   dahir: string
   bo_issue: string
   publication_date: string
   article: string
+  article_fr: string
+  number: string
   topic: string
+  section: string
   text_ar: string
   text_fr: string
+  page_ar: number | null
+  page_fr: number | null
+  source_url_ar: string
+  source_url_fr: string
+  consolidated_ar: string
+  consolidated_fr: string
+  updated_ar: string
+  updated_fr: string
   rrf_score?: number
+}
+
+export interface Law {
+  slug: string
+  title_ar: string
+  title_fr: string
+  law_number: string
+  domain: string
+  dahir: string
+  url_ar: string
+  url_fr: string
+  updated_ar: string
+  updated_fr: string
+  consolidated_ar: string
+  consolidated_fr: string
+  latest_bo: string
+  count_ar: number
+  count_fr: number
+}
+
+export interface LawArticle {
+  number: string
+  label: string
+  section: string
+  page: number
+  text: string
+}
+
+export interface CatalogDocument {
+  id: number
+  name: string
+  lang: 'ar' | 'fr'
+  trail: string
+  url: string
+  updated: string
 }
 
 export interface QueryTranslation {
@@ -42,6 +94,7 @@ export interface QueryResult {
   verbatim_citations: Citation[]
   ai_commentary: { ar: string; fr: string; darija: string }
   citation_verified: boolean
+  found: boolean
   legal_disclaimer: string
 }
 

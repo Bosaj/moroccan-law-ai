@@ -1,0 +1,470 @@
+{
+  "law_aliases": {
+    "constitution": ["الدستور", "دستور المملكة", "constitution"],
+    "family": ["مدونة الأسرة", "المدونة ديال الأسرة", "moudawana", "mudawana", "moudawwana", "code de la famille", "family code"],
+    "nationality": ["قانون الجنسية", "code de la nationalité"],
+    "civil-status": ["قانون الحالة المدنية", "loi sur l'état civil"],
+    "kafala": ["قانون الكفالة", "كفالة الأطفال", "loi sur la kafala"],
+    "violence-women": ["103.13", "103-13", "محاربة العنف ضد النساء"],
+    "labor": ["مدونة الشغل", "قانون الشغل", "code du travail", "labour code", "labor code"],
+    "domestic-workers": ["19.12", "19-12", "العمال المنزليين"],
+    "work-accidents": ["18.12", "18-12", "حوادث الشغل"],
+    "social-security": ["الضمان الاجتماعي", "cnss"],
+    "health-coverage": ["65.00", "65-00", "التغطية الصحية", "amo", "couverture médicale"],
+    "penal": ["القانون الجنائي", "مجموعة القانون الجنائي", "code pénal", "penal code"],
+    "criminal-procedure": ["المسطرة الجنائية", "procédure pénale"],
+    "road": ["مدونة السير", "code de la route", "52.05", "52-05"],
+    "civil-procedure": ["المسطرة المدنية", "procédure civile"],
+    "judicial-organization": ["التنظيم القضائي", "organisation judiciaire"],
+    "obligations": ["قانون الالتزامات والعقود", "ق.ل.ع", "ظهير الالتزامات", "code des obligations", "dahir des obligations", "doc"],
+    "consumer": ["حماية المستهلك", "31.08", "31-08", "protection du consommateur"],
+    "insurance": ["مدونة التأمينات", "code des assurances"],
+    "commerce": ["مدونة التجارة", "code de commerce"],
+    "public-companies": ["شركات المساهمة", "17.95", "17-95", "sociétés anonymes"],
+    "other-companies": ["5.96", "5-96", "sarl"],
+    "residential-lease": ["67.12", "67-12"],
+    "commercial-lease": ["49.16", "49-16", "bail commercial"],
+    "real-rights": ["مدونة الحقوق العينية", "39.08", "39-08", "droits réels"],
+    "land-registration": ["التحفيظ العقاري", "immatriculation foncière"],
+    "co-ownership": ["18.00", "18-00", "الملكية المشتركة", "copropriété"],
+    "urbanism": ["قانون التعمير", "12.90", "12-90"],
+    "data-protection": ["09.08", "09-08", "9-08", "cndp"],
+    "cybersecurity": ["05.20", "05-20", "الأمن السيبراني", "cybersécurité"],
+    "access-information": ["31.13", "31-13"],
+    "advocates": ["66.23", "66-23", "مهنة المحاماة"],
+    "press": ["88.13", "88-13", "الصحافة والنشر", "code de la presse"],
+    "customs": ["مدونة الجمارك", "code des douanes"]
+  },
+  "entries": [
+    {
+      "triggers": ["طردوني", "جراو عليا", "جرا عليا", "جراو علي", "خرجوني من الخدمة", "حيدوني من الخدمة", "طردني", "الطرد", "طرد تعسفي", "الطرد التعسفي", "tardouni", "jraw 3liya", "jrawni", "licencié", "licenciement", "licencier", "renvoyé", "viré", "dismissal", "fired"],
+      "terms": ["فصل الأجير", "الفصل التعسفي", "التعويض عن الفصل", "الضرر", "الخطأ الجسيم", "licenciement", "indemnité de licenciement", "dommages-intérêts", "faute grave"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["سابق إنذار", "إشعار", "بلا ما يعلموني", "bla ma y3lmouni", "préavis", "preavis", "notice period"],
+      "terms": ["أجل الإخطار", "الإخطار", "préavis", "délai de préavis"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["الخلصة", "خلصة", "ما خلصونيش", "ما خلصنيش", "lkhlsa", "khlsa", "salaire", "smig", "الأجرة", "الراتب", "الصالير", "salary", "wage"],
+      "terms": ["الأجر", "أداء الأجر", "الحد الأدنى القانوني للأجر", "salaire", "paiement du salaire", "salaire minimum"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["ساعات الخدمة", "ساعات العمل", "ساعات الشغل", "ساعات إضافية", "الساعات الإضافية", "لوطان", "heures de travail", "heures supplémentaires", "durée du travail", "working hours", "overtime"],
+      "terms": ["مدة الشغل", "الساعات الإضافية", "durée du travail", "heures supplémentaires"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["كونجي", "الكونجي", "عطلة سنوية", "العطلة السنوية", "congé annuel", "congé payé", "conge paye", "annual leave"],
+      "terms": ["العطلة السنوية المؤدى عنها", "congé annuel payé"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["عطلة الولادة", "إجازة الولادة", "حامل", "حاملة", "congé de maternité", "conge maternite", "maternité", "maternity"],
+      "terms": ["إجازة الولادة", "الأجيرة الحامل", "الوضع", "congé de maternité", "salariée en état de grossesse"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["فترة التجربة", "مدة التجربة", "période d'essai", "periode d'essai", "probation"],
+      "terms": ["فترة الاختبار", "période d'essai"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["الكونطرا", "كونطرا", "عقد العمل", "عقد الخدمة", "contrat de travail", "cdi", "cdd", "employment contract"],
+      "terms": ["عقد الشغل", "عقد الشغل غير المحدد المدة", "محدد المدة", "contrat de travail", "durée déterminée"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["الدراري خدامين", "خدمة الأطفال", "عمل الأطفال", "travail des enfants", "child labour"],
+      "terms": ["تشغيل الأحداث", "الحدث", "emploi des enfants", "mineurs"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["نقابة", "إضراب", "الإضراب", "syndicat", "grève", "greve", "union"],
+      "terms": ["النقابات المهنية", "الإضراب", "syndicats professionnels", "grève"],
+      "laws": ["labor"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["حادثة الشغل", "حادثة شغل", "طحت فالخدمة", "تجرحت فالخدمة", "accident de travail", "accident du travail", "work accident"],
+      "terms": ["حادثة شغل", "التعويض عن حوادث الشغل", "المصاب"],
+      "laws": ["work-accidents"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["لاكنوبس", "cnops", "cnss", "لاسنس", "الضمان الاجتماعي", "sécurité sociale", "social security"],
+      "terms": ["الصندوق الوطني للضمان الاجتماعي", "المؤمن له", "التعويضات العائلية", "راتب الزمانة"],
+      "laws": ["social-security"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["خدامة", "الخدامة", "خادمة", "بونية", "femme de ménage", "travailleuse domestique", "domestic worker", "عاملة منزلية"],
+      "terms": ["العاملة أو العامل المنزلي", "العمل المنزلي", "travailleuse ou travailleur domestique"],
+      "laws": ["domestic-workers"], "domain": "labor_law"
+    },
+    {
+      "triggers": ["نتزوج", "نتزوجو", "الزواج", "زواج", "عقد الزواج", "zwaj", "mariage", "marier", "marriage"],
+      "terms": ["عقد الزواج", "الزواج", "أركان", "شروط", "mariage", "acte de mariage"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["زواج القاصر", "زواج القاصرات", "سن الزواج", "القاصرة", "mariage des mineurs", "âge du mariage", "age du mariage", "mineure", "underage marriage"],
+      "terms": ["أهلية الزواج", "القاصر", "الإذن بالزواج", "الفتى والفتاة", "capacité matrimoniale", "mineur"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["التعدد", "تعدد الزوجات", "زوجة ثانية", "مرا ثانية", "polygamie", "polygamy"],
+      "terms": ["التعدد", "polygamie"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["طلاق", "الطلاق", "تطليق", "التطليق", "نطلق", "طلقني", "tla9", "tlaq", "talaq", "divorce", "divorcer"],
+      "terms": ["الطلاق", "التطليق", "الشقاق", "divorce", "répudiation"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["شقاق", "الشقاق", "chiqaq", "chikak", "discorde"],
+      "terms": ["التطليق للشقاق", "الشقاق", "divorce pour raison de discorde"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["الخلع", "خلع", "khol3", "khul3", "khol"],
+      "terms": ["الطلاق بالخلع", "الخلع", "divorce moyennant compensation"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["نفقة", "النفقة", "nafa9a", "nafaqa", "pension alimentaire", "alimony", "المصروف", "ما كيصرفش", "child support"],
+      "terms": ["النفقة", "نفقة الزوجة", "نفقة الأولاد", "pension alimentaire"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["حضانة", "الحضانة", "hadana", "7adana", "garde des enfants", "garde de l'enfant", "custody", "الدراري مع منو"],
+      "terms": ["الحضانة", "الحاضن", "المحضون", "garde de l'enfant", "dévolution de la garde"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["الورث", "ورث", "إرث", "الإرث", "الميراث", "تركة", "التركة", "lwert", "mirath", "héritage", "succession", "inheritance"],
+      "terms": ["الإرث", "التركة", "الوارث", "الفرض", "التعصيب", "succession", "héritier"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["وصية", "الوصية", "testament", "will"],
+      "terms": ["الوصية", "الموصي", "الموصى له", "testament"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["نسب", "النسب", "ولد الحرام", "filiation", "paternité", "paternity"],
+      "terms": ["النسب", "البنوة", "filiation", "paternité"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["متعة", "المتعة", "don de consolation"],
+      "terms": ["المتعة", "don de consolation"],
+      "laws": ["family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["كفالة", "الكفالة", "kafala", "تبني", "التبني", "adoption"],
+      "terms": ["كفالة الأطفال المهملين", "الكافل", "الطفل المكفول", "enfant abandonné"],
+      "laws": ["kafala", "family"], "domain": "family_law"
+    },
+    {
+      "triggers": ["الحالة المدنية", "كناش الحالة", "عقد الازدياد", "رسم الولادة", "état civil", "acte de naissance", "birth certificate"],
+      "terms": ["الحالة المدنية", "رسم الولادة", "ضابط الحالة المدنية", "التصريح بالولادة"],
+      "laws": ["civil-status"], "domain": "family_law"
+    },
+    {
+      "triggers": ["جنسية", "الجنسية", "nationalité", "nationality", "lجنسية"],
+      "terms": ["الجنسية المغربية", "اكتساب الجنسية", "nationalité marocaine"],
+      "laws": ["nationality"], "domain": "family_law"
+    },
+    {
+      "triggers": ["عنف", "العنف", "كيضربني راجلي", "ضربني راجلي", "violence conjugale", "violence faite aux femmes", "domestic violence"],
+      "terms": ["العنف ضد المرأة", "العنف", "التدابير الحمائية", "violence à l'égard des femmes"],
+      "laws": ["violence-women", "penal"], "domain": "family_law"
+    },
+    {
+      "triggers": ["تحرش", "التحرش", "harcèlement", "harcelement", "harassment"],
+      "terms": ["التحرش الجنسي", "harcèlement sexuel"],
+      "laws": ["penal", "violence-women", "labor"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["سرقة", "السرقة", "سرقوني", "شفار", "شفرني", "chfar", "cheffar", "vol", "volé", "voler", "theft", "stolen"],
+      "terms": ["السرقة", "اختلس", "مال مملوك للغير", "vol", "soustrait frauduleusement"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["نصب", "النصب", "نصبو عليا", "نصب عليا", "احتيال", "الاحتيال", "nsbou", "nsb", "khdaw liya", "escroquerie", "arnaque", "fraud", "scam"],
+      "terms": ["النصب", "استعمل الاحتيال", "escroquerie"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["خيانة الأمانة", "abus de confiance", "breach of trust"],
+      "terms": ["خيانة الأمانة", "abus de confiance"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["تزوير", "التزوير", "زور", "faux", "falsification", "forgery"],
+      "terms": ["التزوير", "زور", "faux en écriture"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["ضربني", "ضربوني", "الضرب", "الجرح", "coups et blessures", "assault"],
+      "terms": ["الضرب أو الجرح", "جرح أو ضرب", "coups ou blessures"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["السب", "القذف", "شتمني", "سبني", "diffamation", "injure", "defamation", "insult"],
+      "terms": ["القذف", "السب", "diffamation", "injure"],
+      "laws": ["penal", "press"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["رشوة", "الرشوة", "rachwa", "corruption", "bribe"],
+      "terms": ["الرشوة", "corruption"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["اغتصاب", "الاغتصاب", "viol", "rape"],
+      "terms": ["الاغتصاب", "viol"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["الخيانة الزوجية", "adultère", "adultere", "adultery"],
+      "terms": ["الخيانة الزوجية", "adultère"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["القتل", "قتل", "meurtre", "homicide", "murder"],
+      "terms": ["القتل العمد", "meurtre"],
+      "laws": ["penal"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["الحراسة النظرية", "لاكارد", "شدوني البوليس", "شدني البوليس", "البوليس", "garde à vue", "police custody"],
+      "terms": ["الحراسة النظرية", "ضابط الشرطة القضائية"],
+      "laws": ["criminal-procedure"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["شكاية", "نشكي", "نضع شكاية", "plainte", "porter plainte", "complaint"],
+      "terms": ["الشكاية", "وكيل الملك", "المطالب بالحق المدني"],
+      "laws": ["criminal-procedure"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["قرصنة", "هاك", "هاكر", "piratage", "hacking", "hacker"],
+      "terms": ["نظم المعالجة الآلية للمعطيات", "systèmes de traitement automatisé des données"],
+      "laws": ["penal", "cybersecurity"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["شيك بدون رصيد", "شيك بلا رصيد", "شيك خاوي", "cheque bla rssid", "cheque bla rassid", "cheque khawi", "chèque sans provision", "cheque sans provision", "bounced cheque"],
+      "terms": ["الشيك", "مؤونة", "عدم توفير مؤونة", "chèque", "provision", "défaut de provision"],
+      "laws": ["commerce"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["رخصة السياقة", "البيرمي", "permis de conduire", "driving licence", "driver license"],
+      "terms": ["رخصة السياقة", "السائق", "النقط"],
+      "laws": ["road"], "domain": "road_law"
+    },
+    {
+      "triggers": ["مخالفة السير", "الرادار", "السرعة", "حادثة سير", "حادثة السير", "accident de la route", "excès de vitesse", "infraction routière", "traffic fine", "speeding"],
+      "terms": ["مخالفة", "تجاوز السرعة", "حادثة سير", "السياقة"],
+      "laws": ["road"], "domain": "road_law"
+    },
+    {
+      "triggers": ["الكرا", "كرا", "كراء", "الكراء", "lkra", "moul dar", "مول الدار", "صاحب الدار", "مكتري", "المكتري", "المكري", "loyer", "locataire", "bailleur", "louer", "rent", "tenant", "landlord"],
+      "terms": ["المكري", "المكتري", "الوجيبة الكرائية", "عقد الكراء", "الإفراغ"],
+      "laws": ["residential-lease"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["بغا يخرجني", "يخرجني من الدار", "ykhrjni", "الإفراغ", "إفراغ", "expulsion", "eviction"],
+      "terms": ["الإفراغ", "الإشعار بالإفراغ", "دعوى الإفراغ", "éviction"],
+      "laws": ["residential-lease", "commercial-lease"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["الحانوت", "حانوت", "lhanout", "محل تجاري", "الأصل التجاري", "fonds de commerce", "bail commercial", "pas de porte", "الساروت"],
+      "terms": ["الأصل التجاري", "المحلات المخصصة للاستعمال التجاري", "الحق في الكراء", "fonds de commerce", "bail commercial"],
+      "laws": ["commercial-lease", "commerce"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["التحفيظ", "المحافظة", "الرسم العقاري", "titre foncier", "conservation foncière", "immatriculation", "land title"],
+      "terms": ["التحفيظ العقاري", "الرسم العقاري", "المحافظ على الأملاك العقارية", "titre foncier", "conservateur de la propriété foncière"],
+      "laws": ["land-registration", "real-rights"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["الأرض", "أرض", "العقار", "الحيازة", "الشفعة", "chfa3a", "préemption", "propriété", "الملكية", "الهبة", "الصدقة", "droit de propriété"],
+      "terms": ["حق الملكية", "الحيازة", "الشفعة", "الهبة", "propriété", "préemption", "possession"],
+      "laws": ["real-rights"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["سانديك", "syndic", "السنديك", "copropriété", "الملكية المشتركة", "الاتحاد ديال السكان"],
+      "terms": ["اتحاد الملاك المشتركين", "وكيل الاتحاد", "syndicat des copropriétaires", "syndic"],
+      "laws": ["co-ownership"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["رخصة البناء", "بني بلا رخصة", "البناء بدون رخصة", "permis de construire", "construction sans autorisation", "building permit"],
+      "terms": ["رخصة البناء", "البناء", "permis de construire"],
+      "laws": ["urbanism", "building-violations"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["نزع الملكية", "expropriation"],
+      "terms": ["نزع الملكية لأجل المنفعة العامة", "expropriation pour cause d'utilité publique"],
+      "laws": ["expropriation"], "domain": "real_estate_lease"
+    },
+    {
+      "triggers": ["المستهلك", "شريت", "رجعت السلعة", "نرجع السلعة", "consommateur", "consumer", "achat", "droit de rétractation", "rétractation", "البيع عن بعد", "vente à distance", "refund"],
+      "terms": ["المستهلك", "المورد", "حق التراجع", "البيع عن بعد", "consommateur", "fournisseur", "droit de rétractation"],
+      "laws": ["consumer"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["ضمان", "الضمان", "garantie", "vice caché", "عيب", "العيوب", "warranty"],
+      "terms": ["ضمان العيوب", "العيوب الخفية", "ضمان", "garantie des défauts", "vices cachés"],
+      "laws": ["obligations", "consumer"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["كريدي", "الكريدي", "قرض", "crédit", "credit", "loan"],
+      "terms": ["القرض", "القرض الاستهلاكي", "المقترض", "crédit à la consommation"],
+      "laws": ["consumer", "obligations"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["عقد", "العقد", "فسخ العقد", "الشرط الجزائي", "contrat", "résiliation", "clause pénale", "contract"],
+      "terms": ["العقد", "فسخ", "الالتزام", "الأهلية", "contrat", "résolution", "obligation"],
+      "laws": ["obligations"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["تعويض", "التعويض", "الضرر", "المسؤولية المدنية", "dommages et intérêts", "dommages-intérêts", "responsabilité civile", "damages"],
+      "terms": ["التعويض", "الضرر", "المسؤولية", "dommages-intérêts", "responsable du dommage"],
+      "laws": ["obligations"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["تقادم", "التقادم", "prescription", "limitation period"],
+      "terms": ["التقادم", "prescription"],
+      "laws": ["obligations", "criminal-procedure"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["التأمين", "تأمين", "لاسورانس", "assurance", "insurance"],
+      "terms": ["عقد التأمين", "المؤمن له", "المؤمن", "contrat d'assurance"],
+      "laws": ["insurance"], "domain": "obligations_contracts"
+    },
+    {
+      "triggers": ["نفتح شركة", "نبدل شركة", "شركة ذات المسؤولية", "sarl", "société à responsabilité limitée", "création de société", "llc"],
+      "terms": ["الشركة ذات المسؤولية المحدودة", "رأسمال الشركة", "société à responsabilité limitée"],
+      "laws": ["other-companies"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["شركة مساهمة", "شركات المساهمة", "société anonyme", "sociétés anonymes"],
+      "terms": ["شركة المساهمة", "المساهمين", "société anonyme", "actionnaires"],
+      "laws": ["public-companies"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["مقاول ذاتي", "المقاول الذاتي", "auto-entrepreneur", "auto entrepreneur", "autoentrepreneur"],
+      "terms": ["المقاول الذاتي", "auto-entrepreneur"],
+      "laws": ["auto-entrepreneur"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["إفلاس", "الإفلاس", "صعوبات المقاولة", "faillite", "redressement judiciaire", "liquidation judiciaire", "bankruptcy"],
+      "terms": ["مساطر صعوبات المقاولة", "التسوية القضائية", "التصفية القضائية", "redressement judiciaire", "liquidation judiciaire"],
+      "laws": ["commerce"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["السجل التجاري", "registre de commerce", "registre du commerce", "commercial register"],
+      "terms": ["السجل التجاري", "التقييد في السجل التجاري", "registre de commerce", "immatriculation"],
+      "laws": ["commerce"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["الكمبيالة", "كمبيالة", "lettre de change", "traite", "bill of exchange"],
+      "terms": ["الكمبيالة", "lettre de change"],
+      "laws": ["commerce"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["علامة تجارية", "ماركة", "براءة اختراع", "marque", "brevet", "trademark", "patent"],
+      "terms": ["العلامة", "براءة الاختراع", "marque", "brevet d'invention"],
+      "laws": ["industrial-property"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["حقوق المؤلف", "droit d'auteur", "droits d'auteur", "copyright"],
+      "terms": ["حقوق المؤلف", "المؤلف", "المصنف"],
+      "laws": ["copyright"], "domain": "commercial_law"
+    },
+    {
+      "triggers": ["المعطيات الشخصية", "حماية المعطيات", "كاميرا", "الكاميرات", "كاميرات المراقبة", "بصمة", "cndp", "données personnelles", "vidéosurveillance", "caméra", "rgpd", "personal data"],
+      "terms": ["المعطيات ذات الطابع الشخصي", "معالجة المعطيات", "اللجنة الوطنية", "données à caractère personnel", "traitement"],
+      "laws": ["data-protection"], "domain": "data_privacy_law"
+    },
+    {
+      "triggers": ["التوقيع الإلكتروني", "signature électronique", "e-signature"],
+      "terms": ["التوقيع الإلكتروني", "signature électronique"],
+      "laws": ["electronic-data"], "domain": "data_privacy_law"
+    },
+    {
+      "triggers": ["استئناف", "الاستئناف", "نستأنف", "appel", "faire appel", "appeal"],
+      "terms": ["الطعن بالاستئناف", "أجل الاستئناف", "appel"],
+      "laws": ["civil-procedure", "criminal-procedure"], "domain": "procedure_law"
+    },
+    {
+      "triggers": ["نرفع دعوى", "دعوى", "الدعوى", "مقال افتتاحي", "assigner", "action en justice", "lawsuit"],
+      "terms": ["الدعوى", "المقال الافتتاحي", "المحكمة المختصة", "الصفة والأهلية والمصلحة"],
+      "laws": ["civil-procedure"], "domain": "procedure_law"
+    },
+    {
+      "triggers": ["تنفيذ الحكم", "مفوض قضائي", "المفوض القضائي", "exécution du jugement", "huissier", "enforcement"],
+      "terms": ["تنفيذ الأحكام", "المفوض القضائي", "السند التنفيذي"],
+      "laws": ["civil-procedure"], "domain": "procedure_law"
+    },
+    {
+      "triggers": ["تحكيم", "التحكيم", "وساطة", "الوساطة", "arbitrage", "médiation", "arbitration", "mediation"],
+      "terms": ["التحكيم", "الوساطة الاتفاقية", "اتفاق التحكيم", "الهيئة التحكيمية"],
+      "laws": ["arbitration"], "domain": "procedure_law"
+    },
+    {
+      "triggers": ["جمعية", "الجمعية", "نأسس جمعية", "association"],
+      "terms": ["تأسيس الجمعيات", "الجمعية", "التصريح"],
+      "laws": ["associations"], "domain": "public_law"
+    },
+    {
+      "triggers": ["مظاهرة", "المظاهرات", "وقفة احتجاجية", "manifestation", "protest"],
+      "terms": ["المظاهرات", "التجمعات العمومية", "التصريح"],
+      "laws": ["public-gatherings"], "domain": "public_law"
+    },
+    {
+      "triggers": ["صحافي", "صحفي", "جريدة", "journaliste", "journalist"],
+      "terms": ["الصحافي المهني", "الصحافة", "النشر", "journaliste professionnel"],
+      "laws": ["press"], "domain": "public_law"
+    },
+    {
+      "triggers": ["الحصول على المعلومات", "الحق في المعلومة", "accès à l'information", "access to information"],
+      "terms": ["الحق في الحصول على المعلومات", "droit d'accès à l'information"],
+      "laws": ["access-information"], "domain": "public_law"
+    },
+    {
+      "triggers": ["محامي", "المحامي", "أتعاب", "الأتعاب", "avocat", "honoraires", "lawyer"],
+      "terms": ["المحامي", "مهنة المحاماة", "الأتعاب"],
+      "laws": ["advocates"], "domain": "professions_law"
+    },
+    {
+      "triggers": ["موثق", "الموثق", "notaire", "notary"],
+      "terms": ["الموثق", "مهنة التوثيق"],
+      "laws": ["notaries"], "domain": "professions_law"
+    },
+    {
+      "triggers": ["العدول", "عدل", "adoul", "adul"],
+      "terms": ["العدل", "خطة العدالة", "adoul"],
+      "laws": ["adoul"], "domain": "professions_law"
+    },
+    {
+      "triggers": ["الديوانة", "ديوانة", "الجمارك", "جمرك", "douane", "customs"],
+      "terms": ["الجمارك", "البضائع", "الرسوم والمكوس"],
+      "laws": ["customs"], "domain": "tax_law"
+    },
+    {
+      "triggers": ["بطاقة الإقامة", "الهجرة السرية", "حريك", "الحريك", "harraga", "hrig", "carte de séjour", "titre de séjour", "étranger", "residence permit"],
+      "terms": ["بطاقة الإقامة", "الهجرة غير المشروعة", "الأجنبي", "carte d'immatriculation", "émigration"],
+      "laws": ["foreigners"], "domain": "penal_law"
+    },
+    {
+      "triggers": ["البيئة", "التلوث", "pollution", "environnement", "environment"],
+      "terms": ["حماية البيئة", "التلوث"],
+      "laws": ["environment"], "domain": "public_law"
+    },
+    {
+      "triggers": ["حرية التعبير", "حقوق المواطن", "liberté d'expression", "droits fondamentaux", "دستور", "الدستور", "constitution", "freedom of expression"],
+      "terms": ["الحقوق والحريات", "حرية الفكر والرأي والتعبير", "liberté de pensée, d'opinion et d'expression"],
+      "laws": ["constitution"], "domain": "constitutional_law"
+    }
+  ]
+}

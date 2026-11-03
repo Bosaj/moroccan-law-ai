@@ -1,4 +1,4 @@
-import { ClipboardText, GitDiff, Moon, Newspaper, Scales, Sun } from '@phosphor-icons/react'
+import { Books, ClipboardText, GitDiff, Moon, Newspaper, Scales, Sun } from '@phosphor-icons/react'
 import type { ReactNode } from 'react'
 import { LogoMark } from './Logo'
 import { Segmented } from './ui/Segmented'
@@ -7,7 +7,7 @@ import type { Health, UiLang } from '../lib/types'
 import { VIEW_IDS, type ViewId } from '../lib/route'
 import { cn } from '../lib/cn'
 
-const ICONS = { ask: Scales, gazette: Newspaper, compare: GitDiff, audit: ClipboardText } as const
+const ICONS = { ask: Scales, laws: Books, gazette: Newspaper, compare: GitDiff, audit: ClipboardText } as const
 
 interface ShellProps {
   view: ViewId
@@ -33,12 +33,12 @@ function EngineStatus({ health, online }: { health: Health | null; online: boole
             <dd className="font-mono tabular-nums text-ink">{health.corpus_articles_count}</dd>
           </div>
           <div className="flex justify-between gap-3">
-            <dt className="text-ink-3">{s.engine.issues}</dt>
-            <dd className="font-mono tabular-nums text-ink">{health.bo_issues_count}</dd>
+            <dt className="text-ink-3">{s.engine.laws}</dt>
+            <dd className="font-mono tabular-nums text-ink">{health.corpus_laws_count}</dd>
           </div>
           <div className="flex justify-between gap-3">
-            <dt className="text-ink-3">{s.engine.consultations}</dt>
-            <dd className="font-mono tabular-nums text-ink">{health.consultations_logged}</dd>
+            <dt className="text-ink-3">{s.engine.issues}</dt>
+            <dd className="font-mono tabular-nums text-ink">{health.bo_issues_count}</dd>
           </div>
           <div className="pt-1">
             <dt className="text-ink-3">{s.engine.retrieval}</dt>

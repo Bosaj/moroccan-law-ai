@@ -6,6 +6,7 @@ import type { UiLang } from './lib/types'
 import { useHealth } from './lib/useHealth'
 import { Shell } from './components/Shell'
 import { AskView } from './views/AskView'
+import { LawsView } from './views/LawsView'
 import { GazetteView } from './views/GazetteView'
 import { CompareView } from './views/CompareView'
 import { AuditView } from './views/AuditView'
@@ -78,7 +79,8 @@ export function App() {
   return (
     <I18nContext.Provider value={i18n}>
       <Shell view={view} theme={theme} onToggleTheme={toggleTheme} health={health} online={online}>
-        {view === 'ask' && <AskView />}
+        {view === 'ask' && <AskView health={health} />}
+        {view === 'laws' && <LawsView health={health} />}
         {view === 'gazette' && <GazetteView />}
         {view === 'compare' && <CompareView />}
         {view === 'audit' && <AuditView />}
