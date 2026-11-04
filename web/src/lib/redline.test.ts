@@ -39,10 +39,10 @@ Ligne 2 ancienne-]{+Ligne 1 nouvelle
 Ligne 2 nouvelle+}`
       const segments = parseRedlineMarkdown(multiline)
       expect(segments).toHaveLength(2)
-      expect(segments[0].kind).toBe('del')
-      expect(segments[0].text).toContain('Ligne 1 ancienne')
-      expect(segments[1].kind).toBe('ins')
-      expect(segments[1].text).toContain('Ligne 2 nouvelle')
+      expect(segments[0]?.kind).toBe('del')
+      expect(segments[0]?.text).toContain('Ligne 1 ancienne')
+      expect(segments[1]?.kind).toBe('ins')
+      expect(segments[1]?.text).toContain('Ligne 2 nouvelle')
     })
   })
 

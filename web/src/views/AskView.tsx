@@ -242,6 +242,7 @@ export function AskView({ health }: { health: Health | null }) {
   const [result, setResult] = useState<QueryResult | null>(null)
   const [error, setError] = useState<unknown>(null)
   const abort = useRef<AbortController | null>(null)
+  const resultsRef = useRef<HTMLElement>(null)
 
   // Follow the interface language until the user picks an answer language themselves.
   useEffect(() => {
@@ -249,6 +250,13 @@ export function AskView({ health }: { health: Health | null }) {
   }, [lang, touched])
 
   useEffect(() => () => abort.current?.abort(), [])
+
+  // On a phone the answer lands below the form, out of sight
+  useEffect(() => {
+    if (phase === 'done' && window.matchMedia?.('(max-width: 1023px)').matches) {
+      resultsRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'start' })
+    }
+  }, [phase])
 
   async function run(text = query) {
     const q = text.trim()
@@ -348,7 +356,7 @@ export function AskView({ health }: { health: Health | null }) {
           </div>
         </form>
 
-        <section aria-live="polite" aria-busy={phase === 'loading'} className="min-w-0">
+        <section ref={resultsRef} aria-live="polite" aria-busy={phase === 'loading'} className="min-w-0 scroll-mt-20">
           {phase === 'idle' && (
             <div className="flex min-h-72 items-center rounded-2xl border border-dashed border-line-strong p-8">
               <p className="max-w-[40ch] text-ink-3">{s.ask.empty}</p>

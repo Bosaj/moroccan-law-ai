@@ -127,7 +127,7 @@ export function Shell({ view, theme, onToggleTheme, health, online, children }: 
 
         <nav
           aria-label={s.navLabel}
-          className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-line bg-canvas/95 backdrop-blur lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-canvas/95 backdrop-blur lg:hidden"
         >
           {VIEW_IDS.map((id) => {
             const Icon = ICONS[id]
