@@ -5,6 +5,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [0.4.0] - 2026-11-04
+
+### Added
+- 16,313 articles from 50 laws in Arabic and French, cut from the official PDFs on the Ministry of Justice portal, each quote linked to its PDF page.
+- Laws and documents page: read any of the 50 laws article by article, and search 8,226 official documents by title.
+- Consolidation dates, and a warning when a French text can be older than the Arabic.
+- Legal index of common questions, Darija word mapping, and direct lookup of named articles.
+- Retrieval evaluation with tuning, held-out and blind question sets (`tools/eval_retrieval.py`).
+- Deployment on Vercel: https://mizan-law-eta.vercel.app
+
+### Changed
+- Answers now quote official text. The 13 hand-typed entries, which were paraphrases presented as verbatim law, are gone.
+- The note above the results only points at the articles and quotes the closest sentence.
+- Questions that match nothing are declined instead of receiving unrelated articles.
+- An empty question now returns an error instead of answering a default question.
+
+### Fixed
+- Arabic PDF text arriving in broken order, with ligature and stray-space errors.
+- CI ignored test failures.
+- The content policy blocked the theme script and some fonts.
+- The phone navigation wrapped onto two rows, and answers landed out of sight below the form.
+
+### Removed
+- The Streamlit app, the old PDF downloader and the local PDF routes.
+
+### Security
+- Question text is no longer stored.
+
 ## [1.2.0] - 2026-10-25
 ### Added
 - **Moroccan Official Legal PDF Archive (`src/download_laws.py`):**
