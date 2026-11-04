@@ -114,7 +114,7 @@ def test_index_points_only_at_real_articles(corpus):
 def test_lexicon_terms_exist_in_the_statutes(corpus):
     with open(os.path.join(ROOT, "data", "lexicon.json"), encoding="utf-8") as f:
         lexicon = json.load(f)
-    terms = {t for entry in lexicon["entries"] for t in entry["terms"]}
+    terms = {t for entry in lexicon["entries"] for t in entry["terms"]} | {t for word in lexicon["words"] for t in word["to"]}
     unseen = []
     for term in terms:
         words = stems(term)

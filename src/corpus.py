@@ -36,6 +36,7 @@ _REFERENCE = re.compile(
     re.IGNORECASE,
 )
 _EASTERN = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
+_NOTHING: set[str] = set()
 _SENTENCE = re.compile(r"(?<=[.؛;:؟?!])\s+|\n")
 
 
@@ -48,6 +49,10 @@ class Expansion:
     domain: str | None = None
     triggered: bool = False
     groups: list[set[str]] = field(default_factory=list)
+    # Word by word: a question's word, and the statutory words that can stand for it
+    alternatives: dict[str, set[str]] = field(default_factory=dict)
+    route_laws: list[str] = field(default_factory=list)
+    generic_laws: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -70,6 +75,16 @@ class Lexicon:
             for entry in raw["entries"]
         ]
         self.law_aliases = {slug: sorted({normalize(a) for a in aliases}, key=len, reverse=True) for slug, aliases in raw["law_aliases"].items()}
+        self.words: dict[str, dict] = {}
+        self.phrases: list[tuple[str, dict]] = []
+        for word in raw.get("words", []):
+            mapped = {"to": set(stems(" ".join(word["to"]))), "terms": word["to"], "laws": word.get("laws", [])}
+            for form in word["from"]:
+                found = stems(form)
+                if len(found) == 1:
+                    self.words[found[0]] = mapped
+                elif found:
+                    self.phrases.append((normalize(form), mapped))
 
     @staticmethod
     def _contains(text: str, phrase: str) -> bool:
@@ -88,14 +103,31 @@ class Lexicon:
                 matched.append((longest, entry))
         # A long phrase says more than a short word: "عقد الشغل" outranks "عقد" in choosing the law
         for _, entry in sorted(matched, key=lambda m: -m[0]):
-            found.triggered = True
             found.terms.extend(entry["terms"])
             found.groups.append(set(stems(" ".join(entry["terms"]))))
+            # "عقد" or "تعويض" appear in every field of law: they suggest one but cannot choose it
+            target = found.generic_laws if entry.get("generic") else found.laws
             for law in entry.get("laws", []):
-                if law not in found.laws:
-                    found.laws.append(law)
+                if law not in target:
+                    target.append(law)
+            if entry.get("generic"):
+                continue
+            found.triggered = True
             found.domain = found.domain or entry.get("domain")
+        self._expand_words(text, found)
+        found.route_laws.extend(law for law in found.generic_laws if law not in found.route_laws)
         return found
+
+    def _expand_words(self, text: str, found: Expansion) -> None:
+        """Everyday words mean a statutory word here. They guide the search but do not vouch for a match."""
+        mapped: list[tuple[str, dict]] = [(t, self.words[t]) for t in stems(text) if t in self.words]
+        mapped += [(next(iter(stems(p)), p), m) for p, m in self.phrases if self._contains(text, p)]
+        for source, word in mapped:
+            found.alternatives.setdefault(source, set()).update(word["to"])
+            found.terms.extend(word["terms"])
+            for law in word["laws"]:
+                if law not in found.route_laws:
+                    found.route_laws.append(law)
 
     def mentioned_law(self, query: str) -> str | None:
         text = normalize(query)
@@ -222,7 +254,7 @@ class Corpus:
             for text, section in rows[key]:
                 words = stems(text)
                 present = set(words) | set(stems(section))
-                coverage = max(coverage, sum(idf.get(t, 0) for t in question if t in present) / weight_all)
+                coverage = max(coverage, sum(idf.get(t) or unseen_weight for t in question if t in present or expansion.alternatives.get(t, _NOTHING) & present) / weight_all)
                 opening = set(words[:LEAD_WORDS])
                 lead = max(lead, sum(idf.get(t, 0) for t in question if t in opening) / weight_all)
                 pairs = set(zip(words, words[1:]))
@@ -234,15 +266,19 @@ class Corpus:
                 score += 3.0
             elif key[0] in expansion.laws:
                 score += 1.5 - 0.3 * expansion.laws.index(key[0])
+            elif key[0] in expansion.route_laws:
+                score += 1.2 - 0.2 * expansion.route_laws.index(key[0])
             elif expansion.laws:
                 score *= 0.6
+            elif expansion.route_laws:
+                score *= 0.75
             hits.append(Hit(key[0], key[1], score, coverage))
         hits.sort(key=lambda h: h.score, reverse=True)
 
         strong = [h for h in hits if h.coverage >= MIN_COVERAGE or h.law == mentioned or (expansion.triggered and h.law in expansion.laws)]
         pinned = [
             Hit(law_slug, number, INDEX_SCORE - i * 0.1, 1.0)
-            for i, (law_slug, number) in enumerate(self.index.lookup(set(question)))
+            for i, (law_slug, number) in enumerate(self.index.lookup(set(question).union(*expansion.alternatives.values())))
             if (not mentioned or law_slug == mentioned) and (not law or law_slug == law) and self.exists(law_slug, number)
         ]
         seen = {(h.law, h.number) for h in pinned}
