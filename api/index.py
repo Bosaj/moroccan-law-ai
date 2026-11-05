@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from http.server import BaseHTTPRequestHandler  # noqa: E402
 
-from server import MAX_BODY_BYTES, SECURITY_HEADERS, process_api_request  # noqa: E402
+from server import MAX_BODY_BYTES, SECURITY_HEADERS, cache_control, process_api_request  # noqa: E402
 import json  # noqa: E402
 
 
@@ -16,7 +16,7 @@ class handler(BaseHTTPRequestHandler):  # noqa: N801 - the name Vercel looks for
         raw = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
+        self.send_header("Cache-Control", cache_control(self.command, self.path, status))
         self.send_header("Content-Length", str(len(raw)))
         for name, value in SECURITY_HEADERS.items():
             self.send_header(name, value)

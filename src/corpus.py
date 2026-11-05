@@ -13,6 +13,7 @@ import math
 import os
 import re
 import sqlite3
+import threading
 from dataclasses import dataclass, field
 
 from .legal_text import normalize, stem, stems, tokens
@@ -171,11 +172,20 @@ class Corpus:
         self.path = path
         self.lexicon = lexicon or Lexicon()
         self.index = index or LegalIndex()
-        self.db = sqlite3.connect(f"file:{path}?mode=ro&immutable=1", uri=True, check_same_thread=False)
-        self.db.row_factory = sqlite3.Row
+        self._local = threading.local()
         self.laws = {row["slug"]: dict(row) for row in self.db.execute("SELECT * FROM laws")}
         self.meta = {row["key"]: row["value"] for row in self.db.execute("SELECT key, value FROM meta")}
         self.total_articles = int(self.meta.get("articles", "0"))
+
+    @property
+    def db(self) -> sqlite3.Connection:
+        """Requests run on several threads at once, and each gets its own read-only connection."""
+        connection = getattr(self._local, "connection", None)
+        if connection is None:
+            connection = sqlite3.connect(f"file:{self.path}?mode=ro&immutable=1", uri=True)
+            connection.row_factory = sqlite3.Row
+            self._local.connection = connection
+        return connection
 
     # ---- lookups
 

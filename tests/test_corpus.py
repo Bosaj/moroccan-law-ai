@@ -180,3 +180,41 @@ def test_contract_rules_cite_articles_that_exist(corpus):
     assert corpus.exists("data-protection", "12")
     assert "ثلاثة أشهر" in corpus.article("labor", "14", "ar")["text"]
     assert len(MoroccanContractAuditor.COMPLIANCE_RULES) >= 3
+
+
+def test_search_is_safe_across_threads(corpus):
+    from concurrent.futures import ThreadPoolExecutor
+
+    questions = ["شيك بدون مؤونة", "licenciement abusif", "الطلاق بالخلع", "garde des enfants"] * 25
+    with ThreadPoolExecutor(20) as pool:
+        results = list(pool.map(lambda q: corpus.search(q)[0], questions))
+    assert all(results)
+
+
+def test_a_broken_counter_never_fails_a_request(monkeypatch):
+    import sqlite3
+    from contextlib import contextmanager
+
+    import server
+
+    @contextmanager
+    def broken():
+        raise sqlite3.OperationalError("database is locked")
+        yield
+
+    monkeypatch.setattr(server, "_stats_connection", broken)
+    monkeypatch.delenv("VERCEL", raising=False)
+    status, payload = server.process_api_request("POST", "/api/query", json.dumps({"query": "الطلاق", "lang": "ar"}).encode())
+    assert status == 200
+    assert payload["found"] is True
+    assert server.get_audit_stats() == {"consultations_logged": 0, "contract_audits_logged": 0}
+
+
+def test_law_text_may_be_cached_but_answers_may_not():
+    import server
+
+    assert "s-maxage" in server.cache_control("GET", "/api/laws", 200)
+    assert "s-maxage" in server.cache_control("GET", "/api/article?law=family&number=19", 200)
+    assert server.cache_control("GET", "/api/article?law=x", 404) == "no-store"
+    assert server.cache_control("POST", "/api/query", 200) == "no-store"
+    assert server.cache_control("GET", "/api/health", 200) == "no-store"
