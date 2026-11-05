@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [0.4.1] - 2026-11-05
+
+### Fixed
+- Questions no longer fail under concurrent use. A production load test returned 500 on 15 of 120 questions at 20 at a time, and now answers all 120.
+- A locked or failing usage counter can no longer fail a request.
+
+### Changed
+- Law text routes may be cached at the edge for a day. Answers are never cached.
+
 ## [0.4.0] - 2026-11-04
 
 ### Added
