@@ -10,7 +10,9 @@ import json
 import mimetypes
 import os
 import sqlite3
+import sys
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Optional
@@ -27,6 +29,15 @@ DB_PATH = os.environ.get("MIZAN_STATS_DB") or os.path.join(DATA_DIR, "legal_audi
 
 MAX_BODY_BYTES = 1_000_000
 MAX_QUESTION_CHARS = 2_000
+STATS_TIMEOUT_SECONDS = 0.25
+# The law text only changes when the corpus is rebuilt, so shared caches may keep these for a day.
+CACHEABLE_ROUTES = ("/api/laws", "/api/law", "/api/article", "/api/catalog", "/api/bo-issues")
+CACHE_HEADER = "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800"
+
+
+def cache_control(method: str, path: str, status: int) -> str:
+    route = urlparse(path).path
+    return CACHE_HEADER if method == "GET" and status == 200 and route in CACHEABLE_ROUTES else "no-store"
 
 mimetypes.add_type("font/woff2", ".woff2")
 mimetypes.add_type("application/manifest+json", ".webmanifest")
@@ -47,15 +58,28 @@ bo_engine = BulletinOfficielDiffEngine()
 contract_auditor = MoroccanContractAuditor()
 
 
-def _stats_connection() -> sqlite3.Connection:
-    """Counters live on local disk; where that is read-only they fall back to the temp directory."""
+@contextmanager
+def _stats_connection():
+    """
+    Counters live on local disk, or in the temp directory where that is read-only. They are a convenience,
+    so a slow or locked database gives up quickly rather than delaying someone's answer.
+    """
     try:
         os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-        conn = sqlite3.connect(DB_PATH)
+        conn = sqlite3.connect(DB_PATH, timeout=STATS_TIMEOUT_SECONDS)
         conn.execute("CREATE TABLE IF NOT EXISTS _probe (x INTEGER)")
     except (OSError, sqlite3.Error):
-        conn = sqlite3.connect(os.path.join(tempfile.gettempdir(), "mizan_stats.db"))
-    return conn
+        conn = sqlite3.connect(os.path.join(tempfile.gettempdir(), "mizan_stats.db"), timeout=STATS_TIMEOUT_SECONDS)
+    try:
+        with conn:
+            yield conn
+    finally:
+        conn.close()
+
+
+def _counters_enabled() -> bool:
+    # On serverless hosts each instance has its own temp disk, so counts there would mean nothing.
+    return not os.environ.get("VERCEL")
 
 
 def init_db() -> None:
@@ -84,34 +108,46 @@ def init_db() -> None:
             )
             """
         )
-        conn.commit()
 
 
 def log_consultation(lang: str, domain: str, verified: bool, count: int) -> None:
-    init_db()
-    with _stats_connection() as conn:
-        conn.execute(
-            "INSERT INTO consultation_stats (lang, domain, verified, citations_count, created_at) VALUES (?, ?, ?, ?, ?)",
-            (lang, domain, 1 if verified else 0, count, datetime.now(timezone.utc).isoformat()),
-        )
-        conn.commit()
+    if not _counters_enabled():
+        return
+    try:
+        init_db()
+        with _stats_connection() as conn:
+            conn.execute(
+                "INSERT INTO consultation_stats (lang, domain, verified, citations_count, created_at) VALUES (?, ?, ?, ?, ?)",
+                (lang, domain, 1 if verified else 0, count, datetime.now(timezone.utc).isoformat()),
+            )
+    except (OSError, sqlite3.Error) as exc:
+        print(f"[stats] not counted: {exc}", file=sys.stderr)
 
 
 def log_contract_audit(status: str, risk_score: int, violations_count: int) -> None:
-    init_db()
-    with _stats_connection() as conn:
-        conn.execute(
-            "INSERT INTO contract_audits (status, risk_score, violations_count, created_at) VALUES (?, ?, ?, ?)",
-            (status, risk_score, violations_count, datetime.now(timezone.utc).isoformat()),
-        )
-        conn.commit()
+    if not _counters_enabled():
+        return
+    try:
+        init_db()
+        with _stats_connection() as conn:
+            conn.execute(
+                "INSERT INTO contract_audits (status, risk_score, violations_count, created_at) VALUES (?, ?, ?, ?)",
+                (status, risk_score, violations_count, datetime.now(timezone.utc).isoformat()),
+            )
+    except (OSError, sqlite3.Error) as exc:
+        print(f"[stats] not counted: {exc}", file=sys.stderr)
 
 
 def get_audit_stats() -> dict:
-    init_db()
-    with _stats_connection() as conn:
-        c_count = conn.execute("SELECT COUNT(*) FROM consultation_stats").fetchone()[0]
-        a_count = conn.execute("SELECT COUNT(*) FROM contract_audits").fetchone()[0]
+    if not _counters_enabled():
+        return {"consultations_logged": 0, "contract_audits_logged": 0}
+    try:
+        init_db()
+        with _stats_connection() as conn:
+            c_count = conn.execute("SELECT COUNT(*) FROM consultation_stats").fetchone()[0]
+            a_count = conn.execute("SELECT COUNT(*) FROM contract_audits").fetchone()[0]
+    except (OSError, sqlite3.Error):
+        return {"consultations_logged": 0, "contract_audits_logged": 0}
     return {"consultations_logged": c_count, "contract_audits_logged": a_count}
 
 
@@ -278,7 +314,7 @@ class MoroccanLawHTTPRequestHandler(BaseHTTPRequestHandler):
         raw = json.dumps(data, ensure_ascii=False).encode("utf-8")
         self.send_response(status_code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Cache-Control", "no-store")
+        self.send_header("Cache-Control", cache_control(self.command, self.path, status_code))
         self.send_header("Content-Length", str(len(raw)))
         self._security_headers()
         self.end_headers()
