@@ -65,7 +65,9 @@ class MoroccanContractAuditor:
 
         for rule in self.COMPLIANCE_RULES:
             for pat in rule["patterns"]:
-                if re.search(pat, contract_text, flags=re.IGNORECASE | re.DOTALL):
+                # Bounded gaps: an unbounded ".*" between several words backtracks
+                # quadratically or worse on a long text that lacks the last word.
+                if re.search(pat.replace(".*", ".{0,300}"), contract_text, flags=re.IGNORECASE | re.DOTALL):
                     total_risk += rule["risk_points"]
                     title_str = rule["title_ar"] if lang == "ar" else rule["title_fr"]
                     rem_str = rule["remediation_ar"] if lang == "ar" else rule["remediation_fr"]
