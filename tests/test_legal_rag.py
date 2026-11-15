@@ -62,7 +62,32 @@ def test_darija_language_response_mode():
     rag = MoroccanLegalRAG()
     result = rag.answer_query("شنو حقوقي إلى طردوني من الخدمة؟", lang="darija")
     assert result["citation_verified"] is True
+    assert result["citation_audit"]["verified"] is True
+    assert result["citation_audit"]["verified_citations"] == len(result["verbatim_citations"])
     assert len(result["ai_commentary"]["darija"]) > 15
+
+
+def test_citation_verification_layer_and_benchmark():
+    from pathlib import Path
+    from src.citation_verifier import CitationVerificationLayer
+
+    rag = MoroccanLegalRAG()
+    result = rag.answer_query("ما هي شروط عقد الزواج؟", lang="ar")
+    assert result["citation_audit"]["verified"] is True
+
+    # Tamper with a citation text and verify that the audit rejects it
+    tampered = dict(result["verbatim_citations"][0])
+    tampered["text_ar"] = tampered["text_ar"] + " نص مفبرك"
+    audit = rag.verifier.audit_response([tampered], "راجع المادة 999999")
+    assert audit["verified"] is False
+    assert len(audit["unverified_ids"]) == 1
+    assert len(audit["hallucinated_references"]) == 1
+
+    gold_path = Path(__file__).resolve().parent.parent / "data" / "eval" / "gold.json"
+    metrics = CitationVerificationLayer.evaluate_benchmark_set(rag, gold_path, max_cases=10)
+    assert metrics["total_cases"] == 10
+    assert metrics["top5_recall"] >= 0.80
+    assert metrics["citation_verification_rate"] == 1.0
 
 
 class TestMoroccanLegalRAG(unittest.TestCase):
@@ -72,6 +97,7 @@ class TestMoroccanLegalRAG(unittest.TestCase):
         test_legal_domain_classification()
         test_strict_citation_separation_and_verification()
         test_darija_language_response_mode()
+        test_citation_verification_layer_and_benchmark()
 
 
 if __name__ == "__main__":

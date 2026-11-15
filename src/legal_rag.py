@@ -12,6 +12,7 @@ import re
 from typing import Any, Dict, List
 
 from .arabic_nlp import MoroccanLegalNLP
+from .citation_verifier import CitationVerificationLayer
 from .corpus import Corpus, best_excerpt
 
 DOMAIN_FALLBACK = "general_law"
@@ -39,6 +40,7 @@ class MoroccanLegalRAG:
 
     def __init__(self, corpus: Corpus | None = None) -> None:
         self.corpus = corpus or Corpus()
+        self.verifier = CitationVerificationLayer(self.corpus)
 
     @property
     def article_count(self) -> int:
@@ -149,6 +151,7 @@ class MoroccanLegalRAG:
         }
         note = self._note(citations, query)
         key = lang if lang in LEGAL_DISCLAIMERS else "fr"
+        citation_audit = self.verifier.audit_response(citations, note[key])
         return {
             "query": query,
             "darija_translation": translation,
@@ -159,7 +162,8 @@ class MoroccanLegalRAG:
             "matched_articles": citations,
             "verbatim_citations": citations,
             "ai_commentary": note,
-            "citation_verified": verified,
+            "citation_verified": verified and citation_audit["verified"],
+            "citation_audit": citation_audit,
             "found": bool(citations),
             "legal_disclaimer": LEGAL_DISCLAIMERS[key],
             "response": note[key],
