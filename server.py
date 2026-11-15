@@ -29,6 +29,11 @@ DB_PATH = os.environ.get("MIZAN_STATS_DB") or os.path.join(DATA_DIR, "legal_audi
 
 MAX_BODY_BYTES = 1_000_000
 MAX_QUESTION_CHARS = 2_000
+# Anonymous endpoints: cap each field so one request can't use the whole function time budget
+MAX_CONTRACT_CHARS = 50_000
+MAX_DIFF_TEXT_CHARS = 20_000
+MAX_LABEL_CHARS = 200
+MAX_LANG_CHARS = 16
 STATS_TIMEOUT_SECONDS = 0.25
 # The law text only changes when the corpus is rebuilt, so shared caches may keep these for a day.
 CACHEABLE_ROUTES = ("/api/laws", "/api/law", "/api/article", "/api/catalog", "/api/bo-issues")
@@ -201,7 +206,7 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
         query = str(payload.get("query", "")).strip()[:MAX_QUESTION_CHARS]
         if not query:
             raise BadRequest("Ask a question: the query field is empty")
-        lang = str(payload.get("lang", "ar")).strip()
+        lang = str(payload.get("lang", "ar")).strip()[:MAX_LANG_CHARS]
         res = rag_engine.answer_query(query, lang=lang)
         log_consultation(
             lang=lang,
@@ -215,8 +220,10 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
         payload = _json_body(body_bytes)
         old_text = str(payload.get("old_text", ""))
         new_text = str(payload.get("new_text", ""))
-        article_ref = str(payload.get("article_ref", "Custom Statutory Comparison"))
-        bo_issue = str(payload.get("bo_issue", "Custom BO"))
+        if len(old_text) > MAX_DIFF_TEXT_CHARS or len(new_text) > MAX_DIFF_TEXT_CHARS:
+            raise BadRequest(f"Each text can hold at most {MAX_DIFF_TEXT_CHARS} characters")
+        article_ref = str(payload.get("article_ref", "Custom Statutory Comparison"))[:MAX_LABEL_CHARS]
+        bo_issue = str(payload.get("bo_issue", "Custom BO"))[:MAX_LABEL_CHARS]
         diff = bo_engine.compute_article_redline_diff(
             old_text=old_text,
             new_text=new_text,
@@ -228,7 +235,9 @@ def _route_api_request(method: str, path_str: str, body_bytes: bytes = b"") -> t
     if route == "/api/audit-contract" and method == "POST":
         payload = _json_body(body_bytes)
         contract_text = str(payload.get("contract_text", ""))
-        lang = str(payload.get("lang", "fr"))
+        if len(contract_text) > MAX_CONTRACT_CHARS:
+            raise BadRequest(f"The contract can hold at most {MAX_CONTRACT_CHARS} characters")
+        lang = str(payload.get("lang", "fr"))[:MAX_LANG_CHARS]
         report = contract_auditor.audit_contract(contract_text, lang=lang)
         report["rules_checked"] = len(contract_auditor.COMPLIANCE_RULES)
         log_contract_audit(
